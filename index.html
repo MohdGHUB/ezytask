@@ -414,6 +414,24 @@
     }
     .backup-btn:hover { border-color: var(--accent); color: var(--accent); }
 
+    /* ── MIC BUTTON ── */
+    .mic-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--text-muted); font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .mic-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .mic-btn.listening {
+      background: #ef4444; border-color: #ef4444; color: white;
+      animation: micPulse 1s infinite;
+    }
+    @keyframes micPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+      50%      { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) { .week-summary { display: none; } .main { padding: 14px; } .week-strip-wrapper { padding: 14px 14px 0; } header { padding: 12px 14px; flex-wrap: wrap; } }
     @media (max-width: 600px) { .day-name { font-size: 9px; } .day-num { font-size: 14px; } .week-strip { gap: 4px; } .day-card { padding: 7px 3px; min-height: 66px; } .task-added-time { display: none; } .header-date { display: none; } }
@@ -481,6 +499,7 @@
       <input class="add-task-input" id="taskInput" type="text"
         placeholder="Add a task for this day…" maxlength="200" onkeydown="handleKey(event)" />
       <button class="add-btn" onclick="addTask()">+</button>
+      <button class="mic-btn" id="micBtn" onclick="startVoice()" title="Add task by voice">🎤</button>
     </div>
 
     <div class="task-list-wrap">
@@ -1087,6 +1106,88 @@
     applyProfileColor(getProfile().color);
     performRollover();
     renderAll();
+  }
+
+  // ────────────────────────────────────────────
+  // VOICE INPUT
+  // ────────────────────────────────────────────
+  var voiceRecognition = null;
+
+  function startVoice() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { showToast('Voice not supported — try Chrome, Edge or Safari'); return; }
+    if (voiceRecognition) { voiceRecognition.stop(); return; }
+
+    voiceRecognition = new SR();
+    voiceRecognition.lang = 'en-US';
+    voiceRecognition.interimResults = false;
+    voiceRecognition.maxAlternatives = 3;
+
+    var btn = document.getElementById('micBtn');
+    btn.classList.add('listening');
+    btn.textContent = '⏹';
+    showToast('🎤 Listening...');
+
+    voiceRecognition.onresult = function(e) {
+      var transcript = e.results[0][0].transcript;
+      parseVoiceInput(transcript);
+    };
+    voiceRecognition.onerror = function() {
+      showToast('Could not hear you — try again');
+      stopVoice();
+    };
+    voiceRecognition.onend = stopVoice;
+    voiceRecognition.start();
+  }
+
+  function stopVoice() {
+    voiceRecognition = null;
+    var btn = document.getElementById('micBtn');
+    if (btn) { btn.classList.remove('listening'); btn.textContent = '🎤'; }
+  }
+
+  function parseVoiceInput(text) {
+    var original = text;
+    var lower = text.toLowerCase().trim();
+    showToast('🎤 "' + original + '"');
+
+    // Detect hours: "2 hours", "1.5 hours", "half an hour", "an hour"
+    var hours = null;
+    var hoursMatch = lower.match(/(\d+\.?\d*)\s*h(ou)?r/);
+    if (hoursMatch) {
+      hours = parseFloat(hoursMatch[1]);
+      lower = lower.replace(hoursMatch[0], '');
+    } else if (/half an? hour/.test(lower)) {
+      hours = 0.5;
+      lower = lower.replace(/half an? hour/, '');
+    } else if (/an? hour/.test(lower)) {
+      hours = 1;
+      lower = lower.replace(/an? hour/, '');
+    }
+
+    // Clean up remaining text as the task title
+    var title = lower.replace(/\s+/g, ' ').trim();
+    if (title) title = title.charAt(0).toUpperCase() + title.slice(1);
+
+    // Fill in the task input
+    var inp = document.getElementById('taskInput');
+    if (inp && title) inp.value = title;
+
+    // Fill in hours if detected — find the first visible hours input (today's tasks)
+    if (hours !== null) {
+      var hoursInputs = document.querySelectorAll('.hours-input');
+      // Don't auto-fill hours here since the task hasn't been added yet
+      // Store for use after addTask
+      inp.dataset.pendingHours = hours;
+    } else {
+      if (inp) delete inp.dataset.pendingHours;
+    }
+
+    // Focus add button so user just taps once to confirm
+    setTimeout(function() {
+      if (title) document.querySelector('.add-btn').focus();
+      else if (inp) inp.focus();
+    }, 100);
   }
 
   // ────────────────────────────────────────────
