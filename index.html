@@ -324,6 +324,14 @@
     }
     .task-item:hover .task-delete { opacity: 1; }
     .task-delete:hover { color: var(--red); }
+    @media (max-width: 900px) {
+      .task-delete {
+        opacity: 1;
+        color: var(--red);
+        font-size: 16px;
+        padding: 4px 8px;
+      }
+    }
 
     /* ── DAY TOTAL ── */
     .day-total {
