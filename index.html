@@ -908,7 +908,9 @@
     const inp=document.getElementById('taskInput'),text=inp.value.trim(); if(!text) return;
     const key=selectedDate; if(!tasks[key]) tasks[key]=[];
     const now=new Date();
-    tasks[key].push({text,done:false,addedTime:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),hours:null,rolledFrom:null});
+    const pendingHours = inp.dataset.pendingHours ? parseFloat(inp.dataset.pendingHours) : null;
+    delete inp.dataset.pendingHours;
+    tasks[key].push({text,done:false,addedTime:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),hours:pendingHours,rolledFrom:null});
     saveTasks(); inp.value=''; renderAll();
   }
 
@@ -1153,20 +1155,20 @@
 
     // Detect hours: "2 hours", "1.5 hours", "half an hour", "an hour"
     var hours = null;
-    var hoursMatch = lower.match(/(\d+\.?\d*)\s*h(ou)?r/);
+    var hoursMatch = lower.match(/(\d+\.?\d*)\s*h(ou)?rs?/);
     if (hoursMatch) {
       hours = parseFloat(hoursMatch[1]);
       lower = lower.replace(hoursMatch[0], '');
     } else if (/half an? hour/.test(lower)) {
       hours = 0.5;
       lower = lower.replace(/half an? hour/, '');
-    } else if (/an? hour/.test(lower)) {
+    } else if (/an? hours?/.test(lower)) {
       hours = 1;
-      lower = lower.replace(/an? hour/, '');
+      lower = lower.replace(/an? hours?/, '');
     }
 
     // Clean up remaining text as the task title
-    var title = lower.replace(/\s+/g, ' ').trim();
+    var title = lower.replace(/\s+/g, ' ').trim().replace(/[.!?,;]+$/, '');
     if (title) title = title.charAt(0).toUpperCase() + title.slice(1);
 
     // Fill in the task input
@@ -1183,11 +1185,11 @@
       if (inp) delete inp.dataset.pendingHours;
     }
 
-    // Focus add button so user just taps once to confirm
+    // Auto-submit if we got a title, otherwise focus input for correction
     setTimeout(function() {
-      if (title) document.querySelector('.add-btn').focus();
+      if (title) addTask();
       else if (inp) inp.focus();
-    }, 100);
+    }, 150);
   }
 
   // ────────────────────────────────────────────
