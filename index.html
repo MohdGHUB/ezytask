@@ -679,10 +679,17 @@
       if (!incomplete.length) return;
       if (!tasks[today]) tasks[today]=[];
       incomplete.forEach(task => {
+        const srcKey = task.rolledFrom || key;
+        // Skip if this task was already completed on any later day as a rolled copy
+        const completedLater = Object.keys(tasks).some(dayKey => {
+          if (dayKey <= key) return false;
+          return tasks[dayKey].some(t => t.rolledFrom === srcKey && t.text === task.text && t.done);
+        });
+        if (completedLater) return;
         // Only copy if not already rolled to today (avoid duplicates on re-open)
-        const alreadyRolled = tasks[today].some(t => t.rolledFrom === (task.rolledFrom||key) && t.text === task.text);
+        const alreadyRolled = tasks[today].some(t => t.rolledFrom === srcKey && t.text === task.text);
         if (!alreadyRolled) {
-          tasks[today].push({...task, hours: null, rolledFrom: task.rolledFrom||key});
+          tasks[today].push({...task, hours: null, rolledFrom: srcKey});
         }
       });
       // Keep originals in place so hours logged that day are preserved
