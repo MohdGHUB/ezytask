@@ -255,7 +255,7 @@
     .task-item {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-sm); padding: 11px 13px;
-      display: flex; align-items: center; gap: 9px;
+      display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
       transition: background 0.15s, border-color 0.15s, opacity 0.15s;
       animation: slideIn 0.18s ease; cursor: default; position: relative;
     }
@@ -331,6 +331,35 @@
         font-size: 16px;
         padding: 4px 8px;
       }
+    }
+
+    /* ── NOTES ── */
+    .notes-btn {
+      background: none; border: none; color: var(--text-dim); cursor: pointer;
+      font-size: 13px; padding: 2px 4px; border-radius: 4px;
+      opacity: 0; transition: opacity 0.15s, color 0.15s; flex-shrink: 0;
+    }
+    .task-item:hover .notes-btn { opacity: 1; }
+    .notes-btn.has-notes { opacity: 1; color: var(--accent2); }
+    .notes-btn:hover { color: var(--accent); }
+    @media (max-width: 900px) { .notes-btn { opacity: 1; font-size: 16px; padding: 4px 6px; } }
+
+    .task-notes-wrap {
+      display: none; flex-basis: 100%; width: 100%; padding-top: 6px;
+    }
+    .task-notes-wrap.open { display: block; }
+    .task-notes-input {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-size: 12px; font-family: inherit;
+      padding: 8px 10px; outline: none; resize: vertical; min-height: 60px;
+      transition: border-color 0.15s; line-height: 1.5;
+    }
+    .task-notes-input::placeholder { color: var(--text-dim); }
+    .task-notes-input:focus { border-color: var(--accent); }
+
+    .notes-preview {
+      font-size: 11px; color: var(--text-muted); margin-top: 3px; font-style: italic;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;
     }
 
     /* ── DAY TOTAL ── */
@@ -452,7 +481,7 @@
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span style="font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:0.5px;align-self:flex-end;margin-bottom:2px;">v1.1</span>
+    <span style="font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:0.5px;align-self:flex-end;margin-bottom:2px;">v1.2</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
@@ -609,6 +638,7 @@
   let weekOffset   = 0;
   let selectedDate = todayKey();
   let dragSrcKey   = null, dragSrcIdx = null;
+  var openNotesSet = new Set();
 
   function loadProfileData() {
     tasks  = JSON.parse(localStorage.getItem(tasksKey())  || '{}');
@@ -824,12 +854,14 @@
       item.className='task-item'+(task.done?' done':'');
       item.draggable=true; item.dataset.idx=idx;
       const hv=task.hours!==null&&task.hours!==undefined&&task.hours!=='';
+      const noteKey=key+'-'+idx, notesOpen=openNotesSet.has(noteKey), hasNotes=task.notes&&task.notes.trim();
       item.innerHTML=`
         <div class="drag-handle" title="Drag to reorder"><span></span><span></span><span></span></div>
         <div class="task-check ${task.done?'checked':''}"></div>
         <div class="task-body">
           <div class="task-text">${escHtml(task.text)}</div>
           ${task.rolledFrom?`<div class="rolled-badge">↩ from ${fmtRolledDate(task.rolledFrom)}</div>`:''}
+          ${hasNotes&&!notesOpen?`<div class="notes-preview">📝 ${escHtml(task.notes.split('\n')[0])}</div>`:''}
         </div>
         ${!task.rolledFrom&&task.addedTime?`<div class="task-added-time">${escHtml(task.addedTime)}</div>`:''}
         <div class="hours-wrap" title="Time spent (optional)">
@@ -838,11 +870,18 @@
             placeholder="—" value="${hv?task.hours:''}" onclick="event.stopPropagation()" />
           <span class="hours-unit">h</span>
         </div>
+        <button class="notes-btn ${hasNotes?'has-notes':''}" title="${hasNotes?'View/edit notes':'Add notes'}">📝</button>
         <button class="task-delete" title="Remove">✕</button>
+        <div class="task-notes-wrap${notesOpen?' open':''}">
+          <textarea class="task-notes-input" placeholder="Notes or progress updates…" onclick="event.stopPropagation()">${hasNotes?escHtml(task.notes):''}</textarea>
+        </div>
       `;
 
       item.querySelector('.task-check').addEventListener('click', e=>{e.stopPropagation();toggleTask(key,idx);});
       item.querySelector('.hours-input').addEventListener('change', e=>setHours(key,idx,e.target.value));
+      item.querySelector('.notes-btn').addEventListener('click', e=>{e.stopPropagation();toggleNotes(key,idx);});
+      item.querySelector('.task-notes-input').addEventListener('blur', e=>saveNotes(key,idx,e.target.value));
+      item.querySelector('.task-notes-input').addEventListener('click', e=>e.stopPropagation());
       item.querySelector('.task-delete').addEventListener('click', e=>{e.stopPropagation();deleteTask(key,idx);});
 
       // ── Inline edit on double-click ──
@@ -931,6 +970,24 @@
   }
 
   function toggleTask(k,i){tasks[k][i].done=!tasks[k][i].done;saveTasks();renderAll();}
+
+  function toggleNotes(k,i) {
+    var nk=k+'-'+i;
+    if(openNotesSet.has(nk)) openNotesSet.delete(nk); else openNotesSet.add(nk);
+    renderAll();
+    // Focus textarea if just opened
+    if(openNotesSet.has(nk)) {
+      var items=document.querySelectorAll('.task-item');
+      var wrap=items[i]&&items[i].querySelector('.task-notes-input');
+      if(wrap) setTimeout(()=>wrap.focus(),50);
+    }
+  }
+
+  function saveNotes(k,i,val) {
+    if(!tasks[k]||!tasks[k][i]) return;
+    tasks[k][i].notes = val.trim()||null;
+    saveTasks(); renderAll();
+  }
   function setHours(k,i,v){const p=parseFloat(v);tasks[k][i].hours=(isNaN(p)||p<0)?null:p;saveTasks();renderAll();}
   function deleteTask(k,i){if(!confirm('Delete this task?'))return;tasks[k].splice(i,1);if(!tasks[k].length)delete tasks[k];saveTasks();renderAll();}
   function handleKey(e){if(e.key==='Enter')addTask();}
