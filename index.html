@@ -333,6 +333,26 @@
       }
     }
 
+    /* ── DO NOW ── */
+    @keyframes doNowGlow {
+      0%, 100% { box-shadow: 0 0 4px rgba(245,158,11,0.15), 0 0 0 1px rgba(245,158,11,0.25); }
+      50%       { box-shadow: 0 0 14px rgba(245,158,11,0.4), 0 0 0 1px rgba(245,158,11,0.6); }
+    }
+    .task-item.do-now {
+      border-color: #f59e0b;
+      background: rgba(245,158,11,0.05);
+      animation: slideIn 0.18s ease, doNowGlow 1.8s ease-in-out 0.2s infinite;
+    }
+    .do-now-btn {
+      background: none; border: none; color: var(--text-dim); cursor: pointer;
+      font-size: 13px; padding: 2px 4px; border-radius: 4px;
+      opacity: 0; transition: opacity 0.15s, color 0.15s; flex-shrink: 0;
+    }
+    .task-item:hover .do-now-btn { opacity: 1; }
+    .do-now-btn.active { opacity: 1; color: #f59e0b; }
+    .do-now-btn:hover { color: #f59e0b; }
+    @media (max-width: 900px) { .do-now-btn { opacity: 1; font-size: 16px; padding: 4px 6px; } }
+
     /* ── NOTES ── */
     .notes-btn {
       background: none; border: none; color: var(--text-dim); cursor: pointer;
@@ -481,7 +501,7 @@
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span style="font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:0.5px;align-self:flex-end;margin-bottom:2px;">v1.3</span>
+    <span style="font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:0.5px;align-self:flex-end;margin-bottom:2px;">v1.4</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
@@ -852,9 +872,14 @@
       document.getElementById('dayTotal').style.display='none'; return;
     }
 
-    arr.forEach((task,idx) => {
+    // Do Now tasks float to the top (undone only)
+    const sortedArr = [
+      ...arr.map((t,i)=>({t,i})).filter(({t})=>t.doNow&&!t.done),
+      ...arr.map((t,i)=>({t,i})).filter(({t})=>!t.doNow||t.done)
+    ];
+    sortedArr.forEach(({t:task, i:idx}) => {
       const item=document.createElement('div');
-      item.className='task-item'+(task.done?' done':'');
+      item.className='task-item'+(task.done?' done':'')+(task.doNow&&!task.done?' do-now':'');
       item.draggable=true; item.dataset.idx=idx;
       const hv=task.hours!==null&&task.hours!==undefined&&task.hours!=='';
       const noteKey=key+'-'+idx, notesOpen=openNotesSet.has(noteKey), hasNotes=task.notes&&task.notes.trim();
@@ -873,6 +898,7 @@
             placeholder="—" value="${hv?task.hours:''}" onclick="event.stopPropagation()" />
           <span class="hours-unit">h</span>
         </div>
+        <button class="do-now-btn ${task.doNow?'active':''}" title="${task.doNow?'Clear Do Now':'Mark as Do Now'}">⚡</button>
         <button class="notes-btn ${hasNotes?'has-notes':''}" title="${hasNotes?'View/edit notes':'Add notes'}">📝</button>
         <button class="task-delete" title="Remove">✕</button>
         <div class="task-notes-wrap${notesOpen?' open':''}">
@@ -882,6 +908,7 @@
 
       item.querySelector('.task-check').addEventListener('click', e=>{e.stopPropagation();toggleTask(key,idx);});
       item.querySelector('.hours-input').addEventListener('change', e=>setHours(key,idx,e.target.value));
+      item.querySelector('.do-now-btn').addEventListener('click', e=>{e.stopPropagation();toggleDoNow(key,idx);});
       item.querySelector('.notes-btn').addEventListener('click', e=>{e.stopPropagation();toggleNotes(key,idx);});
       item.querySelector('.task-notes-input').addEventListener('blur', e=>saveNotes(key,idx,e.target.value));
       item.querySelector('.task-notes-input').addEventListener('click', e=>e.stopPropagation());
@@ -968,11 +995,13 @@
     const now=new Date();
     const pendingHours = inp.dataset.pendingHours ? parseFloat(inp.dataset.pendingHours) : null;
     delete inp.dataset.pendingHours;
-    tasks[key].push({text,done:false,addedTime:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),hours:pendingHours,rolledFrom:null});
+    tasks[key].unshift({text,done:false,addedTime:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),hours:pendingHours,rolledFrom:null});
     saveTasks(); inp.value=''; renderAll();
   }
 
   function toggleTask(k,i){tasks[k][i].done=!tasks[k][i].done;saveTasks();renderAll();}
+
+  function toggleDoNow(k,i) { tasks[k][i].doNow=!tasks[k][i].doNow; saveTasks(); renderAll(); }
 
   function toggleNotes(k,i) {
     var nk=k+'-'+i;
