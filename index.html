@@ -481,7 +481,7 @@
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span style="font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:0.5px;align-self:flex-end;margin-bottom:2px;">v1.2</span>
+    <span style="font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:0.5px;align-self:flex-end;margin-bottom:2px;">v1.3</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
@@ -717,10 +717,13 @@
           return tasks[dayKey].some(t => t.rolledFrom === srcKey && t.text === task.text && t.done);
         });
         if (completedLater) return;
-        // Only copy if not already rolled to today (avoid duplicates on re-open)
-        const alreadyRolled = tasks[today].some(t => t.rolledFrom === srcKey && t.text === task.text);
-        if (!alreadyRolled) {
+        const existingIdx = tasks[today].findIndex(t => t.rolledFrom === srcKey && t.text === task.text);
+        if (existingIdx === -1) {
+          // Not in today yet — add it
           tasks[today].push({...task, hours: null, rolledFrom: srcKey});
+        } else if (task.notes) {
+          // Already queued from an earlier copy — carry over notes from this newer copy
+          tasks[today][existingIdx].notes = task.notes;
         }
       });
       // Keep originals in place so hours logged that day are preserved
