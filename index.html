@@ -4,27 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EZY TASK</title>
-  <!-- REVERT: original title was "Dayloom" -->
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0f18;
-      --surface: #111827;
-      --surface2: #1a2436;
-      --border: #1e3048;
-      --accent: #0ea5e9;
-      --accent2: #38bdf8;
-      --accent-glow: rgba(14,165,233,0.14);
-      --text: #e2eaf4;
-      --text-muted: #7a92aa;
-      --text-dim: #3d5470;
-      --done: #34d399;
-      --red: #f87171;
-      --hours-clr: #f59e0b;
-      --rolled-clr: #a78bfa;
-      --radius: 14px;
-      --radius-sm: 8px;
+      --bg:        #111318;
+      --surface:   #18191f;
+      --surface2:  #1f2029;
+      --border:    rgba(255,255,255,0.07);
+      --border-hi: rgba(255,255,255,0.13);
+      --accent:    #5c6bc0;
+      --accent2:   #7986cb;
+      --text:      #c4ccd8;
+      --muted:     #5e6e80;
+      --dim:       #36404f;
+      --done-c:    #4caf7d;
+      --red:       #d96b6b;
+      --amber:     #c98a20;
+      --rolled-clr:#7b6fb0;
+      --hours-clr: #b07540;
+      --radius:    12px;
+      --radius-sm: 7px;
     }
 
     body {
@@ -34,482 +34,530 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      font-size: 13px;
     }
 
     /* ── HEADER ── */
     header {
-      padding: 16px 32px;
+      padding: 11px 24px;
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 14px;
       border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky; top: 0; z-index: 20;
     }
 
-    .logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .logo { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
     .logo-icon {
-      width: 34px; height: 34px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 9px;
+      width: 28px; height: 28px;
+      background: var(--accent);
+      border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 17px; transition: background 0.3s;
+      font-size: 14px;
     }
     .logo-text {
-      font-size: 20px; font-weight: 700;
-      background: linear-gradient(90deg, #fff 0%, var(--accent2) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; letter-spacing: -0.5px;
+      font-size: 14px; font-weight: 700;
+      color: var(--text); letter-spacing: 0.2px;
+    }
+    .logo-ver {
+      font-size: 9px; color: var(--dim); font-weight: 600;
+      align-self: flex-end; margin-bottom: 1px; letter-spacing: 0.3px;
     }
 
-    .header-divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+    .header-divider { width: 1px; height: 20px; background: var(--border-hi); flex-shrink: 0; }
 
     /* ── PROFILE STRIP ── */
     .profile-strip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex: 1;
-      overflow-x: auto;
-      scrollbar-width: none;
+      display: flex; align-items: center; gap: 4px;
+      flex: 1; overflow-x: auto; scrollbar-width: none;
     }
     .profile-strip::-webkit-scrollbar { display: none; }
 
     .profile-tab {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 13px;
-      border-radius: 99px;
-      border: 1.5px solid var(--border);
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 99px;
+      border: 1px solid transparent;
       background: transparent;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s;
-      white-space: nowrap;
-      position: relative;
+      color: var(--muted); font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: all 0.13s; white-space: nowrap;
     }
-    .profile-tab:hover { border-color: var(--accent); color: var(--text); }
+    .profile-tab:hover { border-color: var(--border-hi); color: var(--text); }
     .profile-tab.active {
-      border-color: var(--accent);
-      background: var(--accent-glow);
-      color: var(--text);
-      font-weight: 600;
+      border-color: var(--border-hi);
+      background: var(--surface);
+      color: var(--text); font-weight: 600;
     }
 
-    .profile-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .profile-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
     .profile-name-input {
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 600;
-      font-family: inherit;
-      width: 90px;
+      background: transparent; border: none; outline: none;
+      color: var(--text); font-size: 12px; font-weight: 600;
+      font-family: inherit; width: 80px;
     }
 
     .profile-delete {
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      cursor: pointer;
-      font-size: 14px;
-      padding: 0;
-      margin-left: 2px;
-      line-height: 1;
-      opacity: 0;
-      transition: opacity 0.15s, color 0.15s;
+      background: none; border: none; color: var(--dim);
+      cursor: pointer; font-size: 13px; padding: 0; margin-left: 1px;
+      line-height: 1; opacity: 0; transition: opacity 0.13s, color 0.13s;
     }
     .profile-tab:hover .profile-delete { opacity: 1; }
     .profile-delete:hover { color: var(--red); }
 
     .add-profile-btn {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      border: 1.5px dashed var(--border);
-      background: transparent;
-      color: var(--text-dim);
-      font-size: 18px;
-      cursor: pointer;
+      width: 24px; height: 24px; border-radius: 50%;
+      border: 1px dashed var(--dim);
+      background: transparent; color: var(--dim);
+      font-size: 16px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
-      flex-shrink: 0;
+      transition: all 0.13s; flex-shrink: 0;
     }
     .add-profile-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-    .header-date { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+    .header-date { font-size: 11px; color: var(--muted); flex-shrink: 0; }
 
     /* ── WEEK STRIP ── */
-    .week-strip-wrapper { padding: 18px 32px 0; }
-    .week-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .week-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; flex: 1; }
+    .week-strip-wrapper { padding: 14px 24px 0; }
+    .week-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+    .week-label { font-size: 10px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 1.2px; flex: 1; }
     .nav-btn {
       background: var(--surface); border: 1px solid var(--border);
-      color: var(--text-muted); width: 30px; height: 30px; border-radius: 8px;
+      color: var(--muted); width: 26px; height: 26px; border-radius: 6px;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; transition: all 0.15s;
+      font-size: 12px; transition: all 0.13s;
     }
-    .nav-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+    .nav-btn:hover { border-color: var(--border-hi); color: var(--text); }
     .today-btn {
-      background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
-      padding: 0 12px; height: 30px; border-radius: 8px; cursor: pointer;
-      font-size: 12px; font-weight: 600; letter-spacing: 0.5px; transition: all 0.15s;
+      background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+      padding: 0 10px; height: 26px; border-radius: 6px; cursor: pointer;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+      transition: all 0.13s; font-family: inherit;
     }
-    .today-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .today-btn:hover { color: var(--text); border-color: var(--border-hi); }
 
-    .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+
     .day-card {
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: var(--radius); padding: 11px 8px; cursor: pointer;
-      transition: all 0.18s; text-align: center; min-height: 84px;
-      display: flex; flex-direction: column; align-items: center; gap: 4px; user-select: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 9px 6px 0;
+      cursor: pointer; transition: border-color 0.13s, background 0.13s;
+      text-align: center; min-height: 68px;
+      display: flex; flex-direction: column; align-items: center;
+      overflow: hidden; user-select: none;
     }
-    .day-card:hover { border-color: var(--accent); background: var(--surface2); }
+    .day-card:hover { border-color: var(--border-hi); }
     .day-card.active {
-      border-color: var(--accent); background: var(--accent-glow);
-      box-shadow: 0 0 0 1px var(--accent), 0 4px 24px rgba(14,165,233,0.1);
+      border-color: rgba(92,107,192,0.45);
+      background: rgba(92,107,192,0.06);
     }
     .day-card.today-card .day-num {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff; width: 28px; height: 28px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-weight: 700;
+      background: var(--accent); color: #fff; border-radius: 50%;
     }
-    .day-name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
-    .day-card.active .day-name { color: var(--accent2); }
-    .day-num { font-size: 17px; font-weight: 700; color: var(--text); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
-    .day-task-count { font-size: 10px; color: var(--text-dim); display: flex; align-items: center; gap: 3px; }
-    .count-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); display: inline-block; }
-    .day-hours-badge { font-size: 10px; color: var(--hours-clr); opacity: 0.85; }
+    .day-name { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--dim); margin-bottom: 4px; }
+    .day-card.active .day-name { color: var(--muted); }
+    .day-num { font-size: 14px; font-weight: 700; color: var(--text); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+    .day-info { font-size: 9.5px; color: var(--dim); margin-bottom: 5px; font-weight: 500; }
+    .day-card.active .day-info { color: var(--muted); }
+    .day-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: auto; }
+    .day-bar-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
 
     /* ── MAIN ── */
-    .main { display: flex; flex: 1; gap: 0; padding: 22px 32px; overflow: hidden; }
+    .main { flex: 1; padding: 16px 24px; display: flex; flex-direction: column; }
 
-    /* ── TASK PANEL ── */
-    .task-panel { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-    .panel-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
-    .panel-title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
-    .panel-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-    .progress-info { text-align: right; font-size: 12px; color: var(--text-muted); }
-    .progress-bar-wrap { width: 90px; height: 4px; background: var(--border); border-radius: 99px; margin-top: 5px; overflow: hidden; }
-    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width 0.3s ease; }
+    /* ── PANEL HEADER ── */
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+    }
+    .panel-title-group {}
+    .panel-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
+    .panel-subtitle { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+
+    .panel-right { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+
+    .prog-row { display: flex; align-items: center; gap: 7px; }
+    .prog-text { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+    .prog-bar { width: 56px; height: 2px; background: var(--border-hi); border-radius: 99px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.3s; }
+
+    .hdr-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); padding: 0 10px; height: 28px; border-radius: 6px;
+      cursor: pointer; font-size: 11px; font-weight: 600;
+      transition: border-color 0.13s, color 0.13s; white-space: nowrap;
+      font-family: inherit; display: flex; align-items: center; gap: 5px;
+    }
+    .hdr-btn:hover { border-color: var(--border-hi); color: var(--text); }
+    .hdr-btn.layout-on {
+      border-color: rgba(92,107,192,0.5);
+      color: var(--text); background: rgba(92,107,192,0.08);
+    }
 
     /* ── EXPORT ── */
-    .panel-right { display: flex; align-items: flex-start; gap: 10px; }
     .export-dropdown { position: relative; }
-    .export-btn {
-      background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
-      padding: 0 12px; height: 32px; border-radius: 8px; cursor: pointer;
-      font-size: 12px; font-weight: 600; transition: all 0.15s;
-      display: flex; align-items: center; gap: 5px; white-space: nowrap;
-    }
-    .export-btn:hover { border-color: var(--accent); color: var(--accent); }
     .export-menu {
       display: none; position: absolute; right: 0; top: calc(100% + 5px);
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); overflow: hidden; z-index: 100;
-      min-width: 160px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      background: var(--surface2); border: 1px solid var(--border-hi);
+      border-radius: var(--radius-sm); overflow: hidden; z-index: 100; min-width: 180px;
     }
     .export-menu.open { display: block; }
     .export-menu-item {
-      padding: 9px 14px; font-size: 13px; color: var(--text-muted);
-      cursor: pointer; transition: background 0.12s, color 0.12s; display: flex; align-items: center; gap: 7px;
+      padding: 9px 14px; font-size: 12px; color: var(--muted);
+      cursor: pointer; transition: background 0.11s, color 0.11s;
+      display: flex; align-items: center; gap: 7px;
     }
     .export-menu-item:hover { background: var(--border); color: var(--text); }
 
     /* ── ADD TASK ── */
-    .add-task-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .add-task-row { display: flex; gap: 6px; margin-bottom: 10px; }
     .add-task-input {
-      flex: 1; background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm); color: var(--text); font-size: 14px;
-      padding: 11px 15px; outline: none; transition: border-color 0.15s;
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text); font-size: 13px;
+      padding: 9px 14px; outline: none; transition: border-color 0.13s; font-family: inherit;
     }
-    .add-task-input::placeholder { color: var(--text-dim); }
-    .add-task-input:focus { border-color: var(--accent); }
+    .add-task-input::placeholder { color: var(--dim); }
+    .add-task-input:focus { border-color: rgba(92,107,192,0.5); }
+
     .add-btn {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border: none; border-radius: var(--radius-sm); color: #fff;
-      font-size: 18px; font-weight: 700; width: 44px; cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
+      background: var(--accent); border: none; border-radius: var(--radius-sm);
+      color: #fff; font-size: 20px; font-weight: 700; width: 38px;
+      cursor: pointer; transition: opacity 0.13s;
       display: flex; align-items: center; justify-content: center;
     }
-    .add-btn:hover { opacity: 0.88; }
-    .add-btn:active { transform: scale(0.95); }
+    .add-btn:hover { opacity: 0.85; }
+
+    /* ── MIC ── */
+    .mic-btn {
+      width: 38px; height: 38px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted); font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.13s; flex-shrink: 0;
+    }
+    .mic-btn:hover { border-color: var(--border-hi); color: var(--text); }
+    .mic-btn.listening {
+      background: #c0392b; border-color: #c0392b; color: white;
+      animation: micPulse 1s infinite;
+    }
+    @keyframes micPulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.7; }
+    }
+
+    /* ── TASK SCROLL ── */
+    .task-scroll {
+      overflow-y: auto;
+      flex: 1;
+    }
+    .task-scroll::-webkit-scrollbar { width: 3px; }
+    .task-scroll::-webkit-scrollbar-track { background: transparent; }
+    .task-scroll::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 99px; }
 
     /* ── TASK LIST ── */
-    .task-list-wrap { display: flex; flex-direction: column; flex: 1; min-height: 0; }
     .task-list {
-      display: flex; flex-direction: column; gap: 6px;
-      overflow-y: auto; max-height: calc(100vh - 390px); padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
-    .task-list::-webkit-scrollbar { width: 4px; }
-    .task-list::-webkit-scrollbar-track { background: transparent; }
-    .task-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    /* Two-col wrapper — only task items go inside this, never section labels */
+    .task-items-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 8px;
+      align-items: stretch; /* cards in same row match height */
+    }
+    /* Compact consistent cards in two-col: truncate text, hide notes preview */
+    .task-items-2col .task-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .task-items-2col .notes-preview { display: none; }
+
+    /* Visual indicator: subtle accent bottom border on cards that have notes */
+    .task-items-2col .task-item.has-notes-item {
+      border-bottom-color: rgba(121,134,203,0.45);
+      border-bottom-width: 2px;
+    }
+    /* Hover: floating tooltip reveals note content without shifting layout */
+    .task-items-2col .task-item:hover .notes-preview {
+      display: block;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: -1px; right: -1px;
+      z-index: 200;
+      background: var(--surface2);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--text);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.55);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    @media (max-width: 700px) {
+      .task-items-2col { grid-template-columns: 1fr; align-items: start; }
+      .task-items-2col .task-text { display: block; overflow: visible; -webkit-line-clamp: unset; }
+      .task-items-2col .notes-preview { display: block; position: static; box-shadow: none; }
+      .task-items-2col .task-item.has-notes-item { border-bottom-color: rgba(255,255,255,0.07); border-bottom-width: 1px; }
+      .layout-toggle { display: none !important; }
+    }
+
+    /* ── SECTION LABELS ── */
+    .section-lbl {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--amber);
+      padding: 4px 8px 2px;
+    }
+    .done-header {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--dim);
+      padding: 8px 8px 3px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .done-header::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .list-sep { height: 1px; background: var(--border); margin: 4px 8px 4px; }
 
     /* ── TASK ITEM ── */
     .task-item {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 11px 13px;
-      display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
-      transition: background 0.15s, border-color 0.15s, opacity 0.15s;
-      animation: slideIn 0.18s ease; cursor: default; position: relative;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      display: flex; align-items: flex-start; gap: 8px;
+      flex-wrap: wrap;
+      transition: background 0.11s, border-color 0.11s;
+      cursor: default; position: relative; min-width: 0;
     }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-    .task-item:hover { background: var(--surface2); }
-    .task-item.done { opacity: 0.46; }
+    .task-item:hover {
+      background: var(--surface2);
+      border-color: rgba(255,255,255,0.13);
+    }
+    .task-item.done { opacity: 0.35; }
+
+    /* Do Now: amber left border accent */
+    .task-item.do-now {
+      border-left-color: var(--amber);
+      border-left-width: 2px;
+      padding-left: 8px;
+    }
+    .task-item.do-now:hover {
+      background: var(--surface2);
+      border-color: rgba(255,255,255,0.13);
+      border-left-color: var(--amber);
+      border-left-width: 2px;
+    }
+
     .task-item.dragging { opacity: 0.3; border-style: dashed; }
     .task-item.drag-over-top { border-top: 2px solid var(--accent); }
     .task-item.drag-over-bottom { border-bottom: 2px solid var(--accent); }
 
+    /* Drag handle */
     .drag-handle {
-      color: var(--text-dim); cursor: grab; opacity: 0; transition: opacity 0.15s;
-      flex-shrink: 0; user-select: none; display: flex; flex-direction: column; gap: 2px;
+      color: var(--dim); cursor: grab; opacity: 0; transition: opacity 0.11s;
+      flex-shrink: 0; user-select: none; display: flex; flex-direction: column; gap: 2px; padding-top: 3px;
     }
-    .drag-handle span { display: block; width: 11px; height: 2px; background: currentColor; border-radius: 1px; }
+    .drag-handle span { display: block; width: 10px; height: 1.5px; background: currentColor; border-radius: 1px; }
     .task-item:hover .drag-handle { opacity: 1; }
     .drag-handle:active { cursor: grabbing; }
 
+    /* Check */
     .task-check {
-      width: 19px; height: 19px; border-radius: 50%; border: 2px solid var(--border);
-      cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
+      width: 15px; height: 15px; border-radius: 50%;
+      border: 1.5px solid var(--dim); cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.13s; margin-top: 2px;
     }
-    .task-item:hover .task-check { border-color: var(--accent); }
-    .task-check.checked { background: var(--done); border-color: var(--done); }
-    .task-check.checked::after { content: '✓'; font-size: 10px; color: #fff; font-weight: 700; }
+    .task-item:hover .task-check:not(.checked) { border-color: var(--muted); }
+    .task-check.checked { background: var(--done-c); border-color: var(--done-c); }
+    .task-check.checked::after { content: '✓'; font-size: 8px; color: #fff; font-weight: 700; }
 
-    .task-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-    .task-text { font-size: 14px; line-height: 1.4; cursor: text; }
-    .task-item.done .task-text { text-decoration: line-through; color: var(--text-muted); }
+    /* Body */
+    .task-body { flex: 1; min-width: 0; }
+    .task-text { font-size: 12.5px; line-height: 1.4; color: var(--text); }
+    .task-item.done .task-text { text-decoration: line-through; color: var(--dim); }
 
     .task-edit-input {
-      flex: 1; background: var(--surface2); border: 1.5px solid var(--accent);
-      border-radius: 5px; color: var(--text); font-size: 14px; font-family: inherit;
-      padding: 2px 8px; outline: none; width: 100%;
+      flex: 1; background: var(--surface2); border: 1px solid rgba(92,107,192,0.5);
+      border-radius: 4px; color: var(--text); font-size: 12.5px; font-family: inherit;
+      padding: 2px 7px; outline: none; width: 100%;
     }
 
     .rolled-badge {
       display: inline-flex; align-items: center; gap: 3px;
-      font-size: 10px; color: var(--rolled-clr); font-weight: 500;
-      background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2);
-      border-radius: 4px; padding: 1px 6px; width: fit-content;
+      font-size: 9px; color: var(--rolled-clr); font-weight: 500;
+      background: rgba(123,111,176,0.09); border: 1px solid rgba(123,111,176,0.15);
+      border-radius: 3px; padding: 1px 5px; margin-top: 2px;
     }
 
-    .task-added-time { font-size: 11px; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
+    .task-added-time { font-size: 10px; color: var(--dim); white-space: nowrap; flex-shrink: 0; align-self: center; }
 
-    .hours-wrap { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
-    .hours-icon { font-size: 11px; color: var(--text-dim); transition: color 0.15s; }
+    /* Hours */
+    .hours-wrap { display: flex; align-items: center; gap: 2px; flex-shrink: 0; align-self: center; }
+    .hours-icon { font-size: 10px; color: var(--dim); transition: color 0.13s; }
     .task-item:hover .hours-icon, .hours-icon.has-value { color: var(--hours-clr); }
     .hours-input {
-      width: 44px; background: transparent; border: 1px solid transparent;
-      border-radius: 5px; color: var(--hours-clr); font-size: 12px; font-weight: 600;
-      text-align: center; padding: 2px 3px; outline: none;
-      transition: border-color 0.15s, background 0.15s; -moz-appearance: textfield;
+      width: 38px; background: transparent; border: 1px solid transparent;
+      border-radius: 4px; color: var(--hours-clr); font-size: 11px; font-weight: 600;
+      text-align: center; padding: 1px 2px; outline: none;
+      transition: border-color 0.13s, background 0.13s; -moz-appearance: textfield;
     }
     .hours-input::-webkit-inner-spin-button, .hours-input::-webkit-outer-spin-button { -webkit-appearance: none; }
-    .hours-input::placeholder { color: var(--text-dim); font-weight: 400; }
-    .hours-input:hover, .hours-input:focus { border-color: var(--hours-clr); background: rgba(245,158,11,0.08); }
-    .hours-unit { font-size: 11px; color: var(--text-dim); }
+    .hours-input::placeholder { color: var(--dim); font-weight: 400; }
+    .hours-input:hover, .hours-input:focus { border-color: var(--hours-clr); background: rgba(176,117,64,0.08); }
+    .hours-unit { font-size: 10px; color: var(--dim); }
     .task-item:hover .hours-unit { color: var(--hours-clr); }
 
-    .task-delete {
-      background: none; border: none; color: var(--text-dim); cursor: pointer;
-      font-size: 14px; padding: 2px 4px; border-radius: 4px;
-      opacity: 0; transition: opacity 0.15s, color 0.15s; flex-shrink: 0;
+    /* Action buttons */
+    .do-now-btn, .notes-btn, .task-delete {
+      background: none; border: none; color: var(--dim); cursor: pointer;
+      font-size: 12px; padding: 2px 4px; border-radius: 4px;
+      opacity: 0; transition: opacity 0.11s, color 0.11s; flex-shrink: 0;
+      align-self: center;
     }
+    .task-item:hover .do-now-btn,
+    .task-item:hover .notes-btn,
     .task-item:hover .task-delete { opacity: 1; }
-    .task-delete:hover { color: var(--red); }
-    @media (max-width: 900px) {
-      .task-delete {
-        opacity: 1;
-        color: var(--red);
-        font-size: 16px;
-        padding: 4px 8px;
-      }
-    }
-
-    /* ── DO NOW ── */
-    @keyframes doNowGlow {
-      0%, 100% { box-shadow: 0 0 4px rgba(245,158,11,0.15), 0 0 0 1px rgba(245,158,11,0.25); }
-      50%       { box-shadow: 0 0 14px rgba(245,158,11,0.4), 0 0 0 1px rgba(245,158,11,0.6); }
-    }
-    .task-item.do-now {
-      border-color: #f59e0b;
-      background: rgba(245,158,11,0.05);
-      animation: slideIn 0.18s ease, doNowGlow 1.8s ease-in-out 0.2s infinite;
-    }
-    .do-now-btn {
-      background: none; border: none; color: var(--text-dim); cursor: pointer;
-      font-size: 13px; padding: 2px 4px; border-radius: 4px;
-      opacity: 0; transition: opacity 0.15s, color 0.15s; flex-shrink: 0;
-    }
-    .task-item:hover .do-now-btn { opacity: 1; }
-    .do-now-btn.active { opacity: 1; color: #f59e0b; }
-    .do-now-btn:hover { color: #f59e0b; }
-    @media (max-width: 900px) { .do-now-btn { opacity: 1; font-size: 16px; padding: 4px 6px; } }
-
-    /* ── NOTES ── */
-    .notes-btn {
-      background: none; border: none; color: var(--text-dim); cursor: pointer;
-      font-size: 13px; padding: 2px 4px; border-radius: 4px;
-      opacity: 0; transition: opacity 0.15s, color 0.15s; flex-shrink: 0;
-    }
-    .task-item:hover .notes-btn { opacity: 1; }
+    .do-now-btn.active { opacity: 1; color: var(--amber); }
+    .do-now-btn:hover { color: var(--amber); }
     .notes-btn.has-notes { opacity: 1; color: var(--accent2); }
-    .notes-btn:hover { color: var(--accent); }
-    @media (max-width: 900px) { .notes-btn { opacity: 1; font-size: 16px; padding: 4px 6px; } }
+    .notes-btn:hover { color: var(--accent2); }
+    .task-delete:hover { color: var(--red); }
 
-    .task-notes-wrap {
-      display: none; flex-basis: 100%; width: 100%; padding-top: 6px;
+    @media (max-width: 900px) {
+      .do-now-btn, .notes-btn, .task-delete { opacity: 1; font-size: 14px; padding: 3px 6px; }
     }
+
+    /* Notes expand */
+    .task-notes-wrap { display: none; flex-basis: 100%; width: 100%; padding-top: 5px; }
     .task-notes-wrap.open { display: block; }
     .task-notes-input {
-      width: 100%; background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 6px; color: var(--text); font-size: 12px; font-family: inherit;
-      padding: 8px 10px; outline: none; resize: vertical; min-height: 60px;
-      transition: border-color 0.15s; line-height: 1.5;
+      width: 100%; background: var(--surface2); border: 1px solid var(--border-hi);
+      border-radius: 5px; color: var(--text); font-size: 11.5px; font-family: inherit;
+      padding: 7px 9px; outline: none; resize: vertical; min-height: 52px;
+      transition: border-color 0.13s; line-height: 1.5;
     }
-    .task-notes-input::placeholder { color: var(--text-dim); }
-    .task-notes-input:focus { border-color: var(--accent); }
+    .task-notes-input::placeholder { color: var(--dim); }
+    .task-notes-input:focus { border-color: rgba(92,107,192,0.45); }
 
     .notes-preview {
-      font-size: 11px; color: var(--text-muted); margin-top: 3px; font-style: italic;
+      font-size: 10px; color: var(--muted); margin-top: 2px; font-style: italic;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;
     }
 
     /* ── DAY TOTAL ── */
     .day-total {
-      margin-top: 12px; padding: 10px 14px; background: var(--surface);
+      margin-top: 10px; padding: 8px 12px; background: var(--surface);
       border: 1px solid var(--border); border-radius: var(--radius-sm);
       display: flex; align-items: center; justify-content: space-between;
     }
-    .day-total-label { font-size: 12px; color: var(--text-muted); }
-    .day-total-value { font-size: 14px; font-weight: 700; color: var(--hours-clr); }
+    .day-total-label { font-size: 11px; color: var(--muted); }
+    .day-total-value { font-size: 13px; font-weight: 700; color: var(--hours-clr); }
 
     /* ── EMPTY ── */
-    .empty-state { text-align: center; padding: 50px 20px; color: var(--text-dim); }
-    .empty-icon { font-size: 44px; margin-bottom: 10px; opacity: 0.35; }
-    .empty-text { font-size: 14px; }
-
-    /* ── WEEK SUMMARY ── */
-    .week-summary { width: 220px; margin-left: 26px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
-    .summary-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px; }
-    .summary-item {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 9px 13px; cursor: pointer; transition: all 0.15s;
-    }
-    .summary-item:hover { border-color: var(--accent); }
-    .summary-item.active { border-color: var(--accent); background: var(--accent-glow); }
-    .summary-day-name { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
-    .summary-tasks { font-size: 11px; color: var(--text-dim); }
-    .summary-done { color: var(--done); font-size: 11px; margin-top: 2px; }
-    .summary-hours { color: var(--hours-clr); font-size: 11px; margin-top: 2px; }
+    .empty-state { text-align: center; padding: 50px 20px; color: var(--dim); }
+    .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.2; }
+    .empty-text { font-size: 13px; }
 
     /* ── PROFILE MODAL ── */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6); z-index: 200;
+      background: rgba(0,0,0,0.65); z-index: 200;
       align-items: center; justify-content: center;
     }
     .modal-overlay.open { display: flex; }
     .modal {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 28px; width: 340px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-      animation: modalIn 0.18s ease;
+      background: var(--surface); border: 1px solid var(--border-hi);
+      border-radius: var(--radius); padding: 26px; width: 320px;
     }
-    @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-    .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 18px; }
-    .modal-label { font-size: 11px; color: var(--text-muted); margin-bottom: 7px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+    .modal-label { font-size: 10px; color: var(--muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .modal-input {
-      width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm); color: var(--text); font-size: 14px;
-      padding: 10px 14px; outline: none; transition: border-color 0.15s; margin-bottom: 18px;
+      width: 100%; background: var(--surface2); border: 1px solid var(--border-hi);
+      border-radius: var(--radius-sm); color: var(--text); font-size: 13px;
+      padding: 9px 13px; outline: none; transition: border-color 0.13s; margin-bottom: 16px;
       font-family: inherit;
     }
-    .modal-input:focus { border-color: var(--accent); }
-    .color-grid { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+    .modal-input:focus { border-color: rgba(92,107,192,0.5); }
+    .color-grid { display: flex; gap: 9px; margin-bottom: 20px; flex-wrap: wrap; }
     .color-swatch {
-      width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
-      border: 2.5px solid transparent; transition: all 0.15s;
+      width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+      border: 2px solid transparent; transition: all 0.13s;
     }
     .color-swatch.selected { border-color: #fff; transform: scale(1.15); }
-    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .modal-actions { display: flex; gap: 9px; justify-content: flex-end; }
     .btn-cancel {
-      background: transparent; border: 1px solid var(--border); color: var(--text-muted);
-      padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: all 0.15s;
-      font-family: inherit;
+      background: transparent; border: 1px solid var(--border-hi); color: var(--muted);
+      padding: 7px 16px; border-radius: 6px; cursor: pointer; font-size: 12px;
+      transition: all 0.13s; font-family: inherit;
     }
-    .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
+    .btn-cancel:hover { color: var(--text); border-color: var(--text); }
     .btn-create {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border: none; color: #fff; padding: 8px 18px; border-radius: 8px;
-      cursor: pointer; font-size: 13px; font-weight: 600; transition: opacity 0.15s;
-      font-family: inherit;
+      background: var(--accent); border: none; color: #fff;
+      padding: 7px 16px; border-radius: 6px; cursor: pointer;
+      font-size: 12px; font-weight: 600; transition: opacity 0.13s; font-family: inherit;
     }
     .btn-create:hover { opacity: 0.85; }
 
     /* ── TOAST ── */
     .toast {
-      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text); font-size: 13px; padding: 10px 20px;
-      border-radius: 99px; box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-      z-index: 999; opacity: 0; transition: opacity 0.3s;
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--surface2); border: 1px solid var(--border-hi);
+      color: var(--text); font-size: 12px; padding: 9px 18px;
+      border-radius: 99px; z-index: 999; opacity: 0; transition: opacity 0.3s;
       pointer-events: none; white-space: nowrap;
     }
     .toast.show { opacity: 1; }
-    .backup-btn {
-      background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
-      padding: 0 10px; height: 26px; border-radius: 8px; cursor: pointer;
-      font-size: 11px; font-weight: 600; transition: all 0.15s; flex-shrink: 0;
-    }
-    .backup-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* ── MIC BUTTON ── */
-    .mic-btn {
-      width: 44px; height: 44px; border-radius: 50%;
-      border: 1.5px solid var(--border); background: var(--surface);
-      color: var(--text-muted); font-size: 1.1rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; flex-shrink: 0;
+    .backup-btn {
+      background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+      padding: 0 9px; height: 24px; border-radius: 6px; cursor: pointer;
+      font-size: 10px; font-weight: 600; transition: all 0.13s; flex-shrink: 0; font-family: inherit;
     }
-    .mic-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .mic-btn.listening {
-      background: #ef4444; border-color: #ef4444; color: white;
-      animation: micPulse 1s infinite;
-    }
-    @keyframes micPulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
-      50%      { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-    }
+    .backup-btn:hover { border-color: var(--border-hi); color: var(--text); }
+
+    /* ── SERVER STATUS ── */
+    #serverStatus { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; flex-shrink: 0; }
+    #statusDot { width: 6px; height: 6px; border-radius: 50%; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 900px) { .week-summary { display: none; } .main { padding: 14px; } .week-strip-wrapper { padding: 14px 14px 0; } header { padding: 12px 14px; flex-wrap: wrap; } }
-    @media (max-width: 600px) { .day-name { font-size: 9px; } .day-num { font-size: 14px; } .week-strip { gap: 4px; } .day-card { padding: 7px 3px; min-height: 66px; } .task-added-time { display: none; } .header-date { display: none; } }
+    @media (max-width: 900px) {
+      .main { padding: 12px 14px; }
+      .week-strip-wrapper { padding: 12px 14px 0; }
+      header { padding: 10px 14px; flex-wrap: wrap; }
+      .task-added-time { display: none; }
+    }
+    @media (max-width: 600px) {
+      .day-name { font-size: 8px; }
+      .day-num { font-size: 13px; }
+      .week-strip { gap: 4px; }
+      .day-card { padding: 7px 4px 0; min-height: 60px; }
+      .header-date { display: none; }
+      .panel-title { font-size: 16px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <!-- REVERT: logo-icon was 🧵, logo-text was "Dayloom" -->
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span style="font-size:10px;color:var(--text-dim);font-weight:600;letter-spacing:0.5px;align-self:flex-end;margin-bottom:2px;">v1.4</span>
+    <span class="logo-ver">v2.7</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
   <div class="header-divider"></div>
   <div class="header-date" id="headerDate"></div>
-  <button class="backup-btn" id="backupFolderBtn" onclick="pickBackupFolder()" title="Select folder for automatic daily backups">📁 Set backup folder</button>
-  <div id="serverStatus" style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;opacity:0.8;flex-shrink:0;">
-    <div id="statusDot" style="width:8px;height:8px;border-radius:50%;background:#aaa"></div>
+  <button class="backup-btn" id="backupFolderBtn" onclick="pickBackupFolder()" title="Set auto-backup folder">📁 Backup</button>
+  <div id="serverStatus">
+    <div id="statusDot" style="background:#555"></div>
     <span id="statusLabel">Connecting…</span>
   </div>
 </header>
@@ -525,52 +573,41 @@
 </div>
 
 <div class="main">
-  <div class="task-panel">
-    <div class="panel-header">
-      <div>
-        <div class="panel-title" id="panelTitle"></div>
-        <div class="panel-subtitle" id="panelSubtitle"></div>
+  <div class="panel-header">
+    <div class="panel-title-group">
+      <div class="panel-title" id="panelTitle"></div>
+      <div class="panel-subtitle" id="panelSubtitle"></div>
+    </div>
+    <div class="panel-right">
+      <div class="prog-row">
+        <span class="prog-text" id="progressText"></span>
+        <div class="prog-bar"><div class="prog-fill" id="progressFill" style="width:0%"></div></div>
       </div>
-      <div class="panel-right">
-        <div class="export-dropdown">
-          <button class="export-btn" onclick="toggleExportMenu(event)">⬇ Export</button>
-          <div class="export-menu" id="exportMenu">
-            <div class="export-menu-item" onclick="exportDoc('day')">📄 This day</div>
-            <div class="export-menu-item" onclick="exportDoc('week')">📅 This week</div>
-            <div class="export-menu-item" onclick="exportJSON()">💾 Backup all data (JSON)</div>
-          </div>
-        </div>
-        <label class="export-btn" style="cursor:pointer;" title="Restore from JSON backup">
-          ⬆ Restore
-          <input type="file" id="importInput" accept=".json" style="display:none" onchange="importJSON(event)" />
-        </label>
-        <div class="progress-info">
-          <div id="progressText"></div>
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
-          </div>
+      <button class="hdr-btn layout-toggle" id="layoutBtn" onclick="toggleLayout()">⊞ Two columns</button>
+      <div class="export-dropdown">
+        <button class="hdr-btn" onclick="toggleExportMenu(event)">⬇ Export</button>
+        <div class="export-menu" id="exportMenu">
+          <div class="export-menu-item" onclick="exportDoc('day')">📄 This day</div>
+          <div class="export-menu-item" onclick="exportDoc('week')">📅 This week</div>
+          <div class="export-menu-item" onclick="exportJSON()">💾 Backup all data (JSON)</div>
         </div>
       </div>
-    </div>
-
-    <div class="add-task-row">
-      <input class="add-task-input" id="taskInput" type="text"
-        placeholder="Add a task for this day…" maxlength="200" onkeydown="handleKey(event)" />
-      <button class="add-btn" onclick="addTask()">+</button>
-      <button class="mic-btn" id="micBtn" onclick="startVoice()" title="Add task by voice">🎤</button>
-    </div>
-
-    <div class="task-list-wrap">
-      <div class="task-list" id="taskList"></div>
-      <div class="day-total" id="dayTotal" style="display:none">
-        <div class="day-total-label">⏱ Total time logged</div>
-        <div class="day-total-value" id="dayTotalValue"></div>
-      </div>
+      <label class="hdr-btn" style="cursor:pointer;" title="Restore from JSON backup">
+        ⬆ Restore
+        <input type="file" id="importInput" accept=".json" style="display:none" onchange="importJSON(event)" />
+      </label>
     </div>
   </div>
 
-  <div class="week-summary" id="weekSummary">
-    <div class="summary-title">Week Overview</div>
+  <div class="add-task-row">
+    <input class="add-task-input" id="taskInput" type="text"
+      placeholder="Add a task for this day…" maxlength="200" onkeydown="handleKey(event)" />
+    <button class="add-btn" onclick="addTask()">+</button>
+    <button class="mic-btn" id="micBtn" onclick="startVoice()" title="Add task by voice">🎤</button>
+  </div>
+
+  <div class="task-scroll">
+    <div class="task-list" id="taskList"></div>
   </div>
 </div>
 
@@ -589,6 +626,8 @@
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
   // ────────────────────────────────────────────
@@ -609,8 +648,8 @@
   // CONSTANTS
   // ────────────────────────────────────────────
   const PROFILE_COLORS = [
-    '#0ea5e9','#10b981','#8b5cf6','#f43f5e',
-    '#f59e0b','#14b8a6','#ec4899','#6366f1',
+    '#5c6bc0','#26a69a','#7e57c2','#ef5350',
+    '#ffa726','#26c6da','#ec407a','#66bb6a',
   ];
 
   const DAY_SHORT   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -620,7 +659,6 @@
   // ────────────────────────────────────────────
   // PROFILE STATE — init / migrate
   // ────────────────────────────────────────────
-  // ── Migrate dayloom_* keys → ezytask_* (one-time, silent) ──
   (function migrate() {
     if (localStorage.getItem('dayloom_profiles') && !localStorage.getItem('ezytask_profiles')) {
       for (const k of Object.keys(localStorage)) {
@@ -635,18 +673,9 @@
   let profiles      = JSON.parse(localStorage.getItem('ezytask_profiles') || 'null');
   let activeProfile = localStorage.getItem('ezytask_active') || null;
 
-  // Profile bootstrap handled in initDB()
-
-  function saveProfiles()      {
-    const val = JSON.stringify(profiles);
-    localStorage.setItem('ezytask_profiles', val);
-    dbSave('profiles', profiles);
-  }
-  function saveActiveProfile() {
-    localStorage.setItem('ezytask_active', activeProfile);
-    dbSave('active_profile', activeProfile);
-  }
-  function getProfile()        { return profiles.find(p => p.id === activeProfile) || profiles[0]; }
+  function saveProfiles()      { const val=JSON.stringify(profiles); localStorage.setItem('ezytask_profiles',val); dbSave('profiles',profiles); }
+  function saveActiveProfile() { localStorage.setItem('ezytask_active',activeProfile); dbSave('active_profile',activeProfile); }
+  function getProfile()        { return profiles.find(p=>p.id===activeProfile)||profiles[0]; }
   function tasksKey()          { return `ezytask_tasks_${activeProfile}`; }
   function rolledKey()         { return `ezytask_rolled_${activeProfile}`; }
 
@@ -659,20 +688,15 @@
   let selectedDate = todayKey();
   let dragSrcKey   = null, dragSrcIdx = null;
   var openNotesSet = new Set();
+  var twoCol = false;
 
   function loadProfileData() {
     tasks  = JSON.parse(localStorage.getItem(tasksKey())  || '{}');
     rolled = JSON.parse(localStorage.getItem(rolledKey()) || '{}');
   }
 
-  function saveTasks()  {
-    localStorage.setItem(tasksKey(), JSON.stringify(tasks));
-    dbSave('tasks_' + activeProfile, tasks);
-  }
-  function saveRolled() {
-    localStorage.setItem(rolledKey(), JSON.stringify(rolled));
-    dbSave('rolled_' + activeProfile, rolled);
-  }
+  function saveTasks()  { localStorage.setItem(tasksKey(),JSON.stringify(tasks)); dbSave('tasks_'+activeProfile,tasks); }
+  function saveRolled() { localStorage.setItem(rolledKey(),JSON.stringify(rolled)); dbSave('rolled_'+activeProfile,rolled); }
 
   // ────────────────────────────────────────────
   // HELPERS
@@ -683,13 +707,13 @@
   }
 
   function getWeekDays(offset) {
-    const now = new Date(), sunday = new Date(now);
-    sunday.setDate(now.getDate() - now.getDay() + offset*7);
+    const now=new Date(), sunday=new Date(now);
+    sunday.setDate(now.getDate()-now.getDay()+offset*7);
     sunday.setHours(0,0,0,0);
-    return Array.from({length:7}, (_,i) => { const d=new Date(sunday); d.setDate(sunday.getDate()+i); return d; });
+    return Array.from({length:7},(_,i)=>{ const d=new Date(sunday); d.setDate(sunday.getDate()+i); return d; });
   }
 
-  function dayTotalHours(key) { return (tasks[key]||[]).reduce((s,t) => s+(parseFloat(t.hours)||0), 0); }
+  function dayTotalHours(key) { return (tasks[key]||[]).reduce((s,t)=>s+(parseFloat(t.hours)||0),0); }
 
   function fmtHours(h) {
     if (!h) return '0h';
@@ -698,7 +722,7 @@
   }
 
   function fmtRolledDate(key) {
-    const d = new Date(key+'T12:00:00');
+    const d=new Date(key+'T12:00:00');
     return `${DAY_SHORT[(d.getDay()+6)%7]} ${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
   }
 
@@ -707,47 +731,42 @@
   }
 
   // ────────────────────────────────────────────
-  // ACCENT COLOR
+  // ACCENT COLOR (profile color override)
   // ────────────────────────────────────────────
   function applyProfileColor(color) {
     const r=parseInt(color.slice(1,3),16), g=parseInt(color.slice(3,5),16), b=parseInt(color.slice(5,7),16);
-    const l = (c,a) => Math.min(255,Math.round(c+(255-c)*a));
+    const l=(c,a)=>Math.min(255,Math.round(c+(255-c)*a));
     document.documentElement.style.setProperty('--accent', color);
-    document.documentElement.style.setProperty('--accent2', `rgb(${l(r,.28)},${l(g,.28)},${l(b,.28)})`);
-    document.documentElement.style.setProperty('--accent-glow', `rgba(${r},${g},${b},0.14)`);
+    document.documentElement.style.setProperty('--accent2', `rgb(${l(r,.3)},${l(g,.3)},${l(b,.3)})`);
   }
 
   // ────────────────────────────────────────────
   // ROLLOVER
   // ────────────────────────────────────────────
   function performRollover() {
-    const today = todayKey();
+    const today=todayKey();
     if (rolled[today]) return;
-    const pastKeys = Object.keys(tasks).filter(k=>k<today).sort();
-    let changed = false;
-    pastKeys.forEach(key => {
-      const incomplete = tasks[key].filter(t=>!t.done);
+    const pastKeys=Object.keys(tasks).filter(k=>k<today).sort();
+    let changed=false;
+    pastKeys.forEach(key=>{
+      const incomplete=tasks[key].filter(t=>!t.done);
       if (!incomplete.length) return;
       if (!tasks[today]) tasks[today]=[];
-      incomplete.forEach(task => {
-        const srcKey = task.rolledFrom || key;
-        // Skip if this task was already completed on any later day as a rolled copy
-        const completedLater = Object.keys(tasks).some(dayKey => {
-          if (dayKey <= key) return false;
-          return tasks[dayKey].some(t => t.rolledFrom === srcKey && t.text === task.text && t.done);
+      incomplete.forEach(task=>{
+        const srcKey=task.rolledFrom||key;
+        const completedLater=Object.keys(tasks).some(dayKey=>{
+          if (dayKey<=key) return false;
+          return tasks[dayKey].some(t=>t.rolledFrom===srcKey&&t.text===task.text&&t.done);
         });
         if (completedLater) return;
-        const existingIdx = tasks[today].findIndex(t => t.rolledFrom === srcKey && t.text === task.text);
-        if (existingIdx === -1) {
-          // Not in today yet — add it
-          tasks[today].push({...task, hours: null, rolledFrom: srcKey});
+        const existingIdx=tasks[today].findIndex(t=>t.rolledFrom===srcKey&&t.text===task.text);
+        if (existingIdx===-1) {
+          tasks[today].push({...task, hours:null, rolledFrom:srcKey});
         } else if (task.notes) {
-          // Already queued from an earlier copy — carry over notes from this newer copy
-          tasks[today][existingIdx].notes = task.notes;
+          tasks[today][existingIdx].notes=task.notes;
         }
       });
-      // Keep originals in place so hours logged that day are preserved
-      changed = true;
+      changed=true;
     });
     if (changed) saveTasks();
     rolled[today]=true; saveRolled();
@@ -757,44 +776,43 @@
   // RENDER — Profile Strip
   // ────────────────────────────────────────────
   function renderProfileStrip() {
-    const strip = document.getElementById('profileStrip');
-    strip.innerHTML = '';
+    const strip=document.getElementById('profileStrip');
+    strip.innerHTML='';
 
-    profiles.forEach(p => {
-      const tab = document.createElement('div');
-      tab.className = 'profile-tab' + (p.id===activeProfile?' active':'');
+    profiles.forEach(p=>{
+      const tab=document.createElement('div');
+      tab.className='profile-tab'+(p.id===activeProfile?' active':'');
 
-      const dot = document.createElement('span');
-      dot.className = 'profile-dot'; dot.style.background = p.color;
+      const dot=document.createElement('span');
+      dot.className='profile-dot'; dot.style.background=p.color;
 
-      const nameEl = document.createElement('span');
-      nameEl.textContent = p.name; nameEl.style.userSelect='none';
+      const nameEl=document.createElement('span');
+      nameEl.textContent=p.name; nameEl.style.userSelect='none';
 
-      const del = document.createElement('button');
-      del.className = 'profile-delete'; del.innerHTML = '×'; del.title = 'Delete profile';
+      const del=document.createElement('button');
+      del.className='profile-delete'; del.innerHTML='×'; del.title='Delete profile';
       if (profiles.length<=1) del.style.display='none';
 
-      tab.append(dot, nameEl, del);
+      tab.append(dot,nameEl,del);
+      tab.addEventListener('click',e=>{ if(e.target===del) return; switchProfile(p.id); });
 
-      tab.addEventListener('click', e => { if(e.target===del) return; switchProfile(p.id); });
-
-      nameEl.addEventListener('dblclick', e => {
+      nameEl.addEventListener('dblclick',e=>{
         e.stopPropagation();
-        const inp = document.createElement('input');
+        const inp=document.createElement('input');
         inp.className='profile-name-input'; inp.value=p.name;
-        tab.replaceChild(inp, nameEl); inp.focus(); inp.select();
-        const commit = () => { const v=inp.value.trim(); if(v){p.name=v;saveProfiles();} renderProfileStrip(); };
-        inp.addEventListener('blur', commit);
-        inp.addEventListener('keydown', e2 => { if(e2.key==='Enter'){e2.preventDefault();inp.blur();} if(e2.key==='Escape') renderProfileStrip(); });
+        tab.replaceChild(inp,nameEl); inp.focus(); inp.select();
+        const commit=()=>{ const v=inp.value.trim(); if(v){p.name=v;saveProfiles();} renderProfileStrip(); };
+        inp.addEventListener('blur',commit);
+        inp.addEventListener('keydown',e2=>{ if(e2.key==='Enter'){e2.preventDefault();inp.blur();} if(e2.key==='Escape') renderProfileStrip(); });
       });
 
-      del.addEventListener('click', e => {
+      del.addEventListener('click',e=>{
         e.stopPropagation();
         if (profiles.length<=1) return;
         if (!confirm(`Delete "${p.name}"? All its tasks will be removed.`)) return;
         localStorage.removeItem(`ezytask_tasks_${p.id}`);
         localStorage.removeItem(`ezytask_rolled_${p.id}`);
-        profiles = profiles.filter(x=>x.id!==p.id); saveProfiles();
+        profiles=profiles.filter(x=>x.id!==p.id); saveProfiles();
         if (activeProfile===p.id) { activeProfile=profiles[0].id; saveActiveProfile(); }
         switchProfile(activeProfile);
       });
@@ -802,55 +820,47 @@
       strip.appendChild(tab);
     });
 
-    const addBtn = document.createElement('button');
+    const addBtn=document.createElement('button');
     addBtn.className='add-profile-btn'; addBtn.title='New profile'; addBtn.textContent='+';
-    addBtn.addEventListener('click', openModal);
+    addBtn.addEventListener('click',openModal);
     strip.appendChild(addBtn);
   }
 
   // ────────────────────────────────────────────
-  // RENDER — Week Strip
+  // RENDER — Week Strip (shows done/total + progress bar)
   // ────────────────────────────────────────────
   function renderWeekStrip() {
     const days=getWeekDays(weekOffset), strip=document.getElementById('weekStrip');
     strip.innerHTML='';
     const tk=todayKey(), [first,last]=[days[0],days[6]];
-    document.getElementById('weekLabel').textContent =
+    document.getElementById('weekLabel').textContent=
       `${MONTH_SHORT[first.getMonth()]} ${first.getDate()} – ${MONTH_SHORT[last.getMonth()]} ${last.getDate()}, ${last.getFullYear()}`;
-    days.forEach((d,i) => {
-      const key=fmtKey(d), arr=tasks[key]||[], totalH=dayTotalHours(key);
+    days.forEach((d,i)=>{
+      const key=fmtKey(d), arr=tasks[key]||[];
+      const doneCount=arr.filter(t=>t.done).length, total=arr.length;
+      const pct=total?Math.round(doneCount/total*100):0;
       const card=document.createElement('div');
       card.className='day-card'+(key===tk?' today-card':'')+(key===selectedDate?' active':'');
       card.onclick=()=>selectDay(key);
       card.innerHTML=`
         <div class="day-name">${DAY_SHORT[i]}</div>
         <div class="day-num">${d.getDate()}</div>
-        <div class="day-task-count">${arr.length?`<span class="count-dot"></span> ${arr.length} task${arr.length!==1?'s':''}`:'—'}</div>
-        ${totalH?`<div class="day-hours-badge">⏱ ${fmtHours(totalH)}</div>`:''}
+        <div class="day-info">${total?doneCount+'/'+total:'—'}</div>
+        <div class="day-bar"><div class="day-bar-fill" style="width:${pct}%"></div></div>
       `;
       strip.appendChild(card);
     });
   }
 
   // ────────────────────────────────────────────
-  // RENDER — Week Summary
+  // LAYOUT TOGGLE
   // ────────────────────────────────────────────
-  function renderWeekSummary() {
-    const days=getWeekDays(weekOffset), c=document.getElementById('weekSummary');
-    while(c.children.length>1) c.removeChild(c.lastChild);
-    days.forEach((d,i) => {
-      const key=fmtKey(d), arr=tasks[key]||[], done=arr.filter(t=>t.done).length, totalH=dayTotalHours(key);
-      const el=document.createElement('div');
-      el.className='summary-item'+(key===selectedDate?' active':'');
-      el.onclick=()=>selectDay(key);
-      el.innerHTML=`
-        <div class="summary-day-name">${DAY_SHORT[i]}, ${MONTH_SHORT[d.getMonth()]} ${d.getDate()}</div>
-        <div class="summary-tasks">${arr.length?`${arr.length} task${arr.length!==1?'s':''}`:'No tasks'}</div>
-        ${arr.length?`<div class="summary-done">${done}/${arr.length} done</div>`:''}
-        ${totalH?`<div class="summary-hours">⏱ ${fmtHours(totalH)}</div>`:''}
-      `;
-      c.appendChild(el);
-    });
+  function toggleLayout() {
+    twoCol=!twoCol;
+    const btn=document.getElementById('layoutBtn');
+    btn.textContent=twoCol?'☰ Single column':'⊞ Two columns';
+    btn.classList.toggle('layout-on',twoCol);
+    renderTaskPanel();
   }
 
   // ────────────────────────────────────────────
@@ -861,25 +871,27 @@
     document.getElementById('panelTitle').textContent=`${DAY_LONG[di]}, ${MONTH_SHORT[d.getMonth()]} ${d.getDate()}`;
     document.getElementById('panelSubtitle').textContent=key===todayKey()?'✦ Today':'';
 
-    const arr=tasks[key]||[], done=arr.filter(t=>t.done).length, total=arr.length;
-    document.getElementById('progressText').textContent=total?`${done} of ${total} done`:'';
-    document.getElementById('progressFill').style.width=(total?Math.round(done/total*100):0)+'%';
+    const arr=tasks[key]||[], doneCount=arr.filter(t=>t.done).length, total=arr.length;
+    document.getElementById('progressText').textContent=total?`${doneCount} of ${total} done`:'';
+    document.getElementById('progressFill').style.width=(total?Math.round(doneCount/total*100):0)+'%';
 
-    const list=document.getElementById('taskList'); list.innerHTML='';
+    const list=document.getElementById('taskList');
+    list.innerHTML='';
+    list.className='task-list';
 
     if (!arr.length) {
-      list.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No tasks yet — add one above</div></div>`;
-      document.getElementById('dayTotal').style.display='none'; return;
+      list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No tasks yet — add one above</div></div>';
+      return;
     }
 
-    // Do Now tasks float to the top (undone only)
-    const sortedArr = [
-      ...arr.map((t,i)=>({t,i})).filter(({t})=>t.doNow&&!t.done),
-      ...arr.map((t,i)=>({t,i})).filter(({t})=>!t.doNow||t.done)
-    ];
-    sortedArr.forEach(({t:task, i:idx}) => {
+    // Split into three groups: Do Now, Active, Done
+    const doNowArr  = arr.map((t,i)=>({t,i})).filter(({t})=>t.doNow&&!t.done);
+    const activeArr = arr.map((t,i)=>({t,i})).filter(({t})=>!t.doNow&&!t.done);
+    const doneArr   = arr.map((t,i)=>({t,i})).filter(({t})=>t.done);
+
+    function makeTaskItem(task, idx) {
       const item=document.createElement('div');
-      item.className='task-item'+(task.done?' done':'')+(task.doNow&&!task.done?' do-now':'');
+      item.className='task-item'+(task.done?' done':'')+(task.doNow&&!task.done?' do-now':'')+(hasNotes?' has-notes-item':'');
       item.draggable=true; item.dataset.idx=idx;
       const hv=task.hours!==null&&task.hours!==undefined&&task.hours!=='';
       const noteKey=key+'-'+idx, notesOpen=openNotesSet.has(noteKey), hasNotes=task.notes&&task.notes.trim();
@@ -888,7 +900,7 @@
         <div class="task-check ${task.done?'checked':''}"></div>
         <div class="task-body">
           <div class="task-text">${escHtml(task.text)}</div>
-          ${task.rolledFrom?`<div class="rolled-badge">↩ from ${fmtRolledDate(task.rolledFrom)}</div>`:''}
+          ${task.rolledFrom?`<div class="rolled-badge">↩ ${fmtRolledDate(task.rolledFrom)}</div>`:''}
           ${hasNotes&&!notesOpen?`<div class="notes-preview">📝 ${escHtml(task.notes.split('\n')[0])}</div>`:''}
         </div>
         ${!task.rolledFrom&&task.addedTime?`<div class="task-added-time">${escHtml(task.addedTime)}</div>`:''}
@@ -906,55 +918,55 @@
         </div>
       `;
 
-      item.querySelector('.task-check').addEventListener('click', e=>{e.stopPropagation();toggleTask(key,idx);});
-      item.querySelector('.hours-input').addEventListener('change', e=>setHours(key,idx,e.target.value));
-      item.querySelector('.do-now-btn').addEventListener('click', e=>{e.stopPropagation();toggleDoNow(key,idx);});
-      item.querySelector('.notes-btn').addEventListener('click', e=>{e.stopPropagation();toggleNotes(key,idx);});
-      item.querySelector('.task-notes-input').addEventListener('blur', e=>saveNotes(key,idx,e.target.value));
-      item.querySelector('.task-notes-input').addEventListener('click', e=>e.stopPropagation());
-      item.querySelector('.task-delete').addEventListener('click', e=>{e.stopPropagation();deleteTask(key,idx);});
+      item.querySelector('.task-check').addEventListener('click',e=>{e.stopPropagation();toggleTask(key,idx);});
+      item.querySelector('.hours-input').addEventListener('change',e=>setHours(key,idx,e.target.value));
+      item.querySelector('.do-now-btn').addEventListener('click',e=>{e.stopPropagation();toggleDoNow(key,idx);});
+      item.querySelector('.notes-btn').addEventListener('click',e=>{e.stopPropagation();toggleNotes(key,idx);});
+      item.querySelector('.task-notes-input').addEventListener('blur',e=>saveNotes(key,idx,e.target.value));
+      item.querySelector('.task-notes-input').addEventListener('click',e=>e.stopPropagation());
+      item.querySelector('.task-delete').addEventListener('click',e=>{e.stopPropagation();deleteTask(key,idx);});
 
-      // ── Inline edit on double-click ──
-      item.querySelector('.task-text').addEventListener('dblclick', e => {
+      // Inline edit on double-click
+      item.querySelector('.task-text').addEventListener('dblclick',e=>{
         e.stopPropagation();
-        const textEl = item.querySelector('.task-text');
-        const original = tasks[key][idx].text;
-        const inp = document.createElement('input');
-        inp.className = 'task-edit-input';
-        inp.value = original;
-        item.querySelector('.task-body').replaceChild(inp, textEl);
+        const textEl=item.querySelector('.task-text');
+        const original=tasks[key][idx].text;
+        const inp=document.createElement('input');
+        inp.className='task-edit-input'; inp.value=original;
+        item.querySelector('.task-body').replaceChild(inp,textEl);
         inp.focus(); inp.select();
-        const commit = () => {
-          const val = inp.value.trim();
-          if (val && val !== original) { tasks[key][idx].text = val; saveTasks(); }
+        const commit=()=>{
+          const val=inp.value.trim();
+          if (val&&val!==original){tasks[key][idx].text=val;saveTasks();}
           renderAll();
         };
-        inp.addEventListener('blur', commit);
-        inp.addEventListener('keydown', e2 => {
-          if (e2.key === 'Enter') { e2.preventDefault(); inp.blur(); }
-          if (e2.key === 'Escape') { inp.removeEventListener('blur', commit); renderAll(); }
+        inp.addEventListener('blur',commit);
+        inp.addEventListener('keydown',e2=>{
+          if (e2.key==='Enter'){e2.preventDefault();inp.blur();}
+          if (e2.key==='Escape'){inp.removeEventListener('blur',commit);renderAll();}
         });
       });
 
-      item.addEventListener('dragstart', e=>{
+      // Drag and drop
+      item.addEventListener('dragstart',e=>{
         dragSrcKey=key; dragSrcIdx=idx;
         setTimeout(()=>item.classList.add('dragging'),0);
         e.dataTransfer.effectAllowed='move';
       });
-      item.addEventListener('dragend', ()=>{
+      item.addEventListener('dragend',()=>{
         item.classList.remove('dragging');
         document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(el=>el.classList.remove('drag-over-top','drag-over-bottom'));
         dragSrcKey=null; dragSrcIdx=null;
       });
-      item.addEventListener('dragover', e=>{
+      item.addEventListener('dragover',e=>{
         e.preventDefault(); if(dragSrcKey!==key) return;
         document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(el=>el.classList.remove('drag-over-top','drag-over-bottom'));
         const r=item.getBoundingClientRect();
         item.classList.add(e.clientY<r.top+r.height/2?'drag-over-top':'drag-over-bottom');
         e.dataTransfer.dropEffect='move';
       });
-      item.addEventListener('dragleave', ()=>item.classList.remove('drag-over-top','drag-over-bottom'));
-      item.addEventListener('drop', e=>{
+      item.addEventListener('dragleave',()=>item.classList.remove('drag-over-top','drag-over-bottom'));
+      item.addEventListener('drop',e=>{
         e.preventDefault(); if(dragSrcKey!==key||dragSrcIdx===idx) return;
         const r=item.getBoundingClientRect(), after=e.clientY>=r.top+r.height/2;
         let t=parseInt(item.dataset.idx); if(after) t+=1;
@@ -963,12 +975,69 @@
         saveTasks(); renderAll();
       });
 
-      list.appendChild(item);
-    });
+      return item;
+    }
 
-    const th=dayTotalHours(key), tel=document.getElementById('dayTotal');
-    if(th){document.getElementById('dayTotalValue').textContent=fmtHours(th);tel.style.display='flex';}
-    else tel.style.display='none';
+    function addItems(arr, target) {
+      arr.forEach(({t,i})=>target.appendChild(makeTaskItem(t,i)));
+    }
+
+    if (twoCol) {
+      // ── Two-col mode: one unified grid for Do Now + Active ──
+      // Section labels and separators go INSIDE the grid, spanning both cols
+      const mainGrid=document.createElement('div');
+      mainGrid.className='task-items-2col';
+
+      if (doNowArr.length) {
+        const lbl=document.createElement('div');
+        lbl.className='section-lbl'; lbl.style.gridColumn='1 / -1'; lbl.textContent='⚡ Do Now';
+        mainGrid.appendChild(lbl);
+        addItems(doNowArr, mainGrid);
+        // No separator in two-col mode — active tasks fill the empty slot
+      }
+      addItems(activeArr, mainGrid);
+      list.appendChild(mainGrid);
+
+      // Done section: separate grid
+      if (doneArr.length) {
+        const dh=document.createElement('div');
+        dh.className='done-header'; dh.textContent='Completed '+doneArr.length;
+        list.appendChild(dh);
+        const doneGrid=document.createElement('div');
+        doneGrid.className='task-items-2col';
+        addItems(doneArr, doneGrid);
+        list.appendChild(doneGrid);
+      }
+
+    } else {
+      // ── Single-col mode: flat list ──
+      if (doNowArr.length) {
+        const lbl=document.createElement('div');
+        lbl.className='section-lbl'; lbl.textContent='⚡ Do Now';
+        list.appendChild(lbl);
+        addItems(doNowArr, list);
+        if (activeArr.length||doneArr.length) {
+          const sep=document.createElement('div');
+          sep.className='list-sep'; list.appendChild(sep);
+        }
+      }
+      addItems(activeArr, list);
+      if (doneArr.length) {
+        const dh=document.createElement('div');
+        dh.className='done-header'; dh.textContent='Completed '+doneArr.length;
+        list.appendChild(dh);
+        addItems(doneArr, list);
+      }
+    }
+
+    // Day total hours
+    const th=dayTotalHours(key);
+    if (th) {
+      const tel=document.createElement('div');
+      tel.className='day-total';
+      tel.innerHTML=`<div class="day-total-label">⏱ Total time logged</div><div class="day-total-value">${fmtHours(th)}</div>`;
+      list.appendChild(tel);
+    }
   }
 
   // ────────────────────────────────────────────
@@ -993,31 +1062,30 @@
     const inp=document.getElementById('taskInput'),text=inp.value.trim(); if(!text) return;
     const key=selectedDate; if(!tasks[key]) tasks[key]=[];
     const now=new Date();
-    const pendingHours = inp.dataset.pendingHours ? parseFloat(inp.dataset.pendingHours) : null;
+    const pendingHours=inp.dataset.pendingHours?parseFloat(inp.dataset.pendingHours):null;
     delete inp.dataset.pendingHours;
     tasks[key].unshift({text,done:false,addedTime:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),hours:pendingHours,rolledFrom:null});
     saveTasks(); inp.value=''; renderAll();
   }
 
-  function toggleTask(k,i){tasks[k][i].done=!tasks[k][i].done;saveTasks();renderAll();}
+  function toggleTask(k,i){tasks[k][i].done=!tasks[k][i].done;if(tasks[k][i].done)tasks[k][i].doNow=false;saveTasks();renderAll();}
+  function toggleDoNow(k,i){tasks[k][i].doNow=!tasks[k][i].doNow;saveTasks();renderAll();}
 
-  function toggleDoNow(k,i) { tasks[k][i].doNow=!tasks[k][i].doNow; saveTasks(); renderAll(); }
-
-  function toggleNotes(k,i) {
+  function toggleNotes(k,i){
     var nk=k+'-'+i;
     if(openNotesSet.has(nk)) openNotesSet.delete(nk); else openNotesSet.add(nk);
     renderAll();
-    // Focus textarea if just opened
-    if(openNotesSet.has(nk)) {
-      var items=document.querySelectorAll('.task-item');
-      var wrap=items[i]&&items[i].querySelector('.task-notes-input');
-      if(wrap) setTimeout(()=>wrap.focus(),50);
+    if(openNotesSet.has(nk)){
+      setTimeout(()=>{
+        var all=document.querySelectorAll('.task-item');
+        for(var x=0;x<all.length;x++){if(all[x].dataset.idx==i){var ta=all[x].querySelector('.task-notes-input');if(ta)ta.focus();break;}}
+      },50);
     }
   }
 
-  function saveNotes(k,i,val) {
+  function saveNotes(k,i,val){
     if(!tasks[k]||!tasks[k][i]) return;
-    tasks[k][i].notes = val.trim()||null;
+    tasks[k][i].notes=val.trim()||null;
     saveTasks(); renderAll();
   }
   function setHours(k,i,v){const p=parseFloat(v);tasks[k][i].hours=(isNaN(p)||p<0)?null:p;saveTasks();renderAll();}
@@ -1107,6 +1175,7 @@
         const hs=(t.hours!==null&&t.hours!==undefined&&t.hours!=='')?fmtHours(parseFloat(t.hours)):'';
         const rs=t.rolledFrom?` <span style="font-size:8pt;color:#7c3aed;">(↩ from ${fmtRolledDate(t.rolledFrom)})</span>`:'';
         body+=`<tr style="border-bottom:0.5pt solid #e2e8f0;"><td style="width:22pt;padding:6pt 4pt;${t.done?'color:#059669;font-weight:bold;':'color:#94a3b8;'}">${t.done?'&#10003;':'&#9675;'}</td><td style="padding:6pt 8pt;${t.done?'color:#94a3b8;text-decoration:line-through;':'color:#1e293b;'}">${t.text}${rs}</td><td style="width:60pt;padding:6pt 4pt;text-align:right;color:#d97706;font-size:9pt;">${hs}</td></tr>`;
+        if(t.notes) body+=`<tr><td></td><td colspan="2" style="padding:0 8pt 6pt 8pt;font-size:9pt;color:#64748b;font-style:italic;">${escHtml(t.notes)}</td></tr>`;
       });
       body+=`</table>`;
       if(totalH) body+=`<p style="font-family:Segoe UI,Arial,sans-serif;font-size:10pt;color:#d97706;font-weight:bold;text-align:right;margin:-6pt 0 18pt;">&#9201; Total: ${fmtHours(totalH)}</p>`;
@@ -1124,87 +1193,82 @@
   // RENDER ALL
   // ────────────────────────────────────────────
   function renderAll(){
-    renderProfileStrip(); renderWeekStrip(); renderTaskPanel(); renderWeekSummary();
-    document.getElementById('headerDate').textContent =
+    renderProfileStrip(); renderWeekStrip(); renderTaskPanel();
+    document.getElementById('headerDate').textContent=
       new Date().toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
   }
 
   // ────────────────────────────────────────────
   // SERVER SYNC
   // ────────────────────────────────────────────
-  function updateStatus() {
-    const dot = document.getElementById('statusDot');
-    const lbl = document.getElementById('statusLabel');
-    if (!dot) return;
-    dot.style.background = serverMode ? '#22c55e' : '#f59e0b';
-    lbl.textContent = serverMode ? 'Saved to disk' : 'Local only';
+  function updateStatus(){
+    const dot=document.getElementById('statusDot'), lbl=document.getElementById('statusLabel');
+    if(!dot) return;
+    dot.style.background=serverMode?'#4caf7d':'#c98a20';
+    lbl.textContent=serverMode?'Synced':'Local only';
   }
 
-  async function dbSave(id, data) {
+  async function dbSave(id,data){
     try {
-      await fetch(`${SB_URL}/rest/v1/${SB_TABLE}`, {
-        method: 'POST',
-        headers: SB_HEADERS,
-        body: JSON.stringify({id, data})
+      await fetch(`${SB_URL}/rest/v1/${SB_TABLE}`,{
+        method:'POST', headers:SB_HEADERS,
+        body:JSON.stringify({id,data})
       });
-    } catch(e) {}
+    } catch(e){}
   }
 
-  async function dbDelete(id) {
+  async function dbDelete(id){
     try {
-      await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.${encodeURIComponent(id)}`, {
-        method: 'DELETE', headers: SB_HEADERS
+      await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.${encodeURIComponent(id)}`,{
+        method:'DELETE', headers:SB_HEADERS
       });
-    } catch(e) {}
+    } catch(e){}
   }
 
-  async function initDB() {
+  async function initDB(){
     try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 3000);
-      const res = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?select=id,data`, {
-        headers: SB_HEADERS, signal: controller.signal
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),3000);
+      const res=await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?select=id,data`,{
+        headers:SB_HEADERS, signal:controller.signal
       });
       clearTimeout(timer);
       if (res.ok) {
-        serverMode = true;
-        const records = await res.json();
-        const map = {};
-        records.forEach(r => map[r.id] = r.data);
+        serverMode=true;
+        const records=await res.json();
+        const map={};
+        records.forEach(r=>map[r.id]=r.data);
 
-        if (Object.keys(map).length === 0) {
-          // Server empty — migrate localStorage up to Supabase
-          const keys = Object.keys(localStorage).filter(k => k.startsWith('ezytask_') && k !== BACKUP_LAST_KEY);
+        if (Object.keys(map).length===0) {
+          const keys=Object.keys(localStorage).filter(k=>k.startsWith('ezytask_')&&k!==BACKUP_LAST_KEY);
           for (const k of keys) {
-            const id = k.replace('ezytask_', '');
-            await dbSave(id, JSON.parse(localStorage.getItem(k)));
+            const id=k.replace('ezytask_','');
+            await dbSave(id,JSON.parse(localStorage.getItem(k)));
           }
         } else {
-          // Restore from Supabase into localStorage
-          Object.entries(map).forEach(([id, data]) => {
-            localStorage.setItem('ezytask_' + id, typeof data === 'string' ? data : JSON.stringify(data));
+          Object.entries(map).forEach(([id,data])=>{
+            localStorage.setItem('ezytask_'+id,typeof data==='string'?data:JSON.stringify(data));
           });
         }
       }
-    } catch(e) {
-      serverMode = false;
+    } catch(e){
+      serverMode=false;
     }
 
-    // Boot the app
-    profiles = JSON.parse(localStorage.getItem('ezytask_profiles') || 'null');
-    activeProfile = localStorage.getItem('ezytask_active') || null;
+    profiles=JSON.parse(localStorage.getItem('ezytask_profiles')||'null');
+    activeProfile=localStorage.getItem('ezytask_active')||null;
 
     if (!profiles) {
-      profiles = [
-        { id: 'work',     name: 'Work',     color: '#0ea5e9' },
-        { id: 'personal', name: 'Personal', color: '#10b981' },
+      profiles=[
+        {id:'work',    name:'Work',     color:'#5c6bc0'},
+        {id:'personal',name:'Personal', color:'#26a69a'},
       ];
       saveProfiles();
-      activeProfile = 'work';
+      activeProfile='work';
       saveActiveProfile();
     }
-    if (!activeProfile || !profiles.find(p => p.id === activeProfile)) {
-      activeProfile = profiles[0].id;
+    if (!activeProfile||!profiles.find(p=>p.id===activeProfile)){
+      activeProfile=profiles[0].id;
       saveActiveProfile();
     }
 
@@ -1218,217 +1282,157 @@
   // ────────────────────────────────────────────
   // VOICE INPUT
   // ────────────────────────────────────────────
-  var voiceRecognition = null;
+  var voiceRecognition=null;
 
-  function startVoice() {
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { showToast('Voice not supported — try Chrome, Edge or Safari'); return; }
-    if (voiceRecognition) { voiceRecognition.stop(); return; }
+  function startVoice(){
+    var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if (!SR){showToast('Voice not supported — try Chrome, Edge or Safari');return;}
+    if (voiceRecognition){voiceRecognition.stop();return;}
 
-    voiceRecognition = new SR();
-    voiceRecognition.lang = 'en-US';
-    voiceRecognition.interimResults = false;
-    voiceRecognition.maxAlternatives = 3;
+    voiceRecognition=new SR();
+    voiceRecognition.lang='en-US';
+    voiceRecognition.interimResults=false;
+    voiceRecognition.maxAlternatives=3;
 
-    var btn = document.getElementById('micBtn');
-    btn.classList.add('listening');
-    btn.textContent = '⏹';
+    var btn=document.getElementById('micBtn');
+    btn.classList.add('listening'); btn.textContent='⏹';
     showToast('🎤 Listening...');
 
-    voiceRecognition.onresult = function(e) {
-      var transcript = e.results[0][0].transcript;
-      parseVoiceInput(transcript);
-    };
-    voiceRecognition.onerror = function() {
-      showToast('Could not hear you — try again');
-      stopVoice();
-    };
-    voiceRecognition.onend = stopVoice;
+    voiceRecognition.onresult=function(e){ parseVoiceInput(e.results[0][0].transcript); };
+    voiceRecognition.onerror=function(){ showToast('Could not hear you — try again'); stopVoice(); };
+    voiceRecognition.onend=stopVoice;
     voiceRecognition.start();
   }
 
-  function stopVoice() {
-    voiceRecognition = null;
-    var btn = document.getElementById('micBtn');
-    if (btn) { btn.classList.remove('listening'); btn.textContent = '🎤'; }
+  function stopVoice(){
+    voiceRecognition=null;
+    var btn=document.getElementById('micBtn');
+    if(btn){btn.classList.remove('listening');btn.textContent='🎤';}
   }
 
-  function parseVoiceInput(text) {
-    var original = text;
-    var lower = text.toLowerCase().trim();
-    showToast('🎤 "' + original + '"');
-
-    // iOS Safari speaks numbers as words — convert to digits first
-    var wordNums = {
-      'one':1,'two':2,'three':3,'four':4,'five':5,
-      'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
-      'eleven':11,'twelve':12
-    };
-    lower = lower.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b(\s*h(ou)?rs?)/g, function(m, num, rest) {
-      return wordNums[num] + rest;
-    });
-    // Also handle "a half hour" / "an hour and a half" style
-    lower = lower.replace(/\bone and a half\s*h(ou)?rs?/g, '1.5h');
-    lower = lower.replace(/\btwo and a half\s*h(ou)?rs?/g, '2.5h');
-    lower = lower.replace(/\bthree and a half\s*h(ou)?rs?/g, '3.5h');
-
-    // Detect hours: "2 hours", "1.5 hours", "half an hour", "an hour"
-    var hours = null;
-    var hoursMatch = lower.match(/(\d+\.?\d*)\s*h(ou)?rs?/);
-    if (hoursMatch) {
-      hours = parseFloat(hoursMatch[1]);
-      lower = lower.replace(hoursMatch[0], '');
-    } else if (/half an? hour/.test(lower)) {
-      hours = 0.5;
-      lower = lower.replace(/half an? hour/, '');
-    } else if (/an? hours?/.test(lower)) {
-      hours = 1;
-      lower = lower.replace(/an? hours?/, '');
-    }
-
-    // Clean up remaining text as the task title
-    var title = lower.replace(/\s+/g, ' ').trim().replace(/[.!?,;]+$/, '');
-    if (title) title = title.charAt(0).toUpperCase() + title.slice(1);
-
-    // Fill in the task input
-    var inp = document.getElementById('taskInput');
-    if (inp && title) inp.value = title;
-
-    // Fill in hours if detected — find the first visible hours input (today's tasks)
-    if (hours !== null) {
-      var hoursInputs = document.querySelectorAll('.hours-input');
-      // Don't auto-fill hours here since the task hasn't been added yet
-      // Store for use after addTask
-      inp.dataset.pendingHours = hours;
-    } else {
-      if (inp) delete inp.dataset.pendingHours;
-    }
-
-    // Auto-submit if we got a title, otherwise focus input for correction
-    setTimeout(function() {
-      if (title) addTask();
-      else if (inp) inp.focus();
-    }, 150);
+  function parseVoiceInput(text){
+    var original=text, lower=text.toLowerCase().trim();
+    showToast('🎤 "'+original+'"');
+    var wordNums={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12};
+    lower=lower.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b(\s*h(ou)?rs?)/g,function(m,num,rest){return wordNums[num]+rest;});
+    lower=lower.replace(/\bone and a half\s*h(ou)?rs?/g,'1.5h');
+    lower=lower.replace(/\btwo and a half\s*h(ou)?rs?/g,'2.5h');
+    lower=lower.replace(/\bthree and a half\s*h(ou)?rs?/g,'3.5h');
+    var hours=null, hoursMatch=lower.match(/(\d+\.?\d*)\s*h(ou)?rs?/);
+    if (hoursMatch){hours=parseFloat(hoursMatch[1]);lower=lower.replace(hoursMatch[0],'');}
+    else if(/half an? hour/.test(lower)){hours=0.5;lower=lower.replace(/half an? hour/,'');}
+    else if(/an? hours?/.test(lower)){hours=1;lower=lower.replace(/an? hours?/,'');}
+    var title=lower.replace(/\s+/g,' ').trim().replace(/[.!?,;]+$/,'');
+    if(title) title=title.charAt(0).toUpperCase()+title.slice(1);
+    var inp=document.getElementById('taskInput');
+    if(inp&&title) inp.value=title;
+    if(hours!==null) inp.dataset.pendingHours=hours;
+    else if(inp) delete inp.dataset.pendingHours;
+    setTimeout(function(){if(title)addTask();else if(inp)inp.focus();},150);
   }
 
   // ────────────────────────────────────────────
   // AUTO BACKUP (File System Access API)
   // ────────────────────────────────────────────
-  const BACKUP_FILENAME = 'ezytask-backup.json';
-  const BACKUP_LAST_KEY = 'ezytask_last_backup';
-  let _backupDirHandle  = null; // in-memory handle for this session
+  const BACKUP_FILENAME='ezytask-backup.json';
+  const BACKUP_LAST_KEY='ezytask_last_backup';
+  let _backupDirHandle=null;
 
-  function showToast(msg, duration = 3000) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), duration);
+  function showToast(msg,duration=3000){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),duration);
   }
 
-  // Persist handle via IndexedDB (best-effort — silently skipped if unavailable)
-  function idbSaveHandle(handle) {
+  function idbSaveHandle(handle){
     try {
-      const req = indexedDB.open('ezytask-fs', 1);
-      req.onupgradeneeded = e => e.target.result.createObjectStore('handles');
-      req.onsuccess = e => {
+      const req=indexedDB.open('ezytask-fs',1);
+      req.onupgradeneeded=e=>e.target.result.createObjectStore('handles');
+      req.onsuccess=e=>{
         try {
-          const tx = e.target.result.transaction('handles', 'readwrite');
-          tx.objectStore('handles').put(handle, 'backupDir');
-        } catch(_) {}
+          const tx=e.target.result.transaction('handles','readwrite');
+          tx.objectStore('handles').put(handle,'backupDir');
+        } catch(_){}
       };
-    } catch(_) {}
+    } catch(_){}
   }
 
-  function idbLoadHandle() {
-    return new Promise(res => {
+  function idbLoadHandle(){
+    return new Promise(res=>{
       try {
-        const req = indexedDB.open('ezytask-fs', 1);
-        req.onupgradeneeded = e => e.target.result.createObjectStore('handles');
-        req.onsuccess = e => {
+        const req=indexedDB.open('ezytask-fs',1);
+        req.onupgradeneeded=e=>e.target.result.createObjectStore('handles');
+        req.onsuccess=e=>{
           try {
-            const tx = e.target.result.transaction('handles', 'readonly');
-            const gr = tx.objectStore('handles').get('backupDir');
-            gr.onsuccess = ev => res(ev.target.result || null);
-            gr.onerror   = () => res(null);
-          } catch(_) { res(null); }
+            const tx=e.target.result.transaction('handles','readonly');
+            const gr=tx.objectStore('handles').get('backupDir');
+            gr.onsuccess=ev=>res(ev.target.result||null);
+            gr.onerror=()=>res(null);
+          } catch(_){res(null);}
         };
-        req.onerror = () => res(null);
-      } catch(_) { res(null); }
+        req.onerror=()=>res(null);
+      } catch(_){res(null);}
     });
   }
 
-  function buildBackupData() {
-    const backup = {};
-    for (const k of Object.keys(localStorage)) {
-      if (k.startsWith('ezytask_') && k !== BACKUP_LAST_KEY) {
-        backup[k] = localStorage.getItem(k);
-      }
+  function buildBackupData(){
+    const backup={};
+    for (const k of Object.keys(localStorage)){
+      if(k.startsWith('ezytask_')&&k!==BACKUP_LAST_KEY) backup[k]=localStorage.getItem(k);
     }
-    if (!Object.keys(backup).length) return null;
-    return JSON.stringify(backup, null, 2);
+    if(!Object.keys(backup).length) return null;
+    return JSON.stringify(backup,null,2);
   }
 
-  async function writeBackupFile(dirHandle) {
-    const data = buildBackupData();
-    if (!data) return false;
+  async function writeBackupFile(dirHandle){
+    const data=buildBackupData(); if(!data) return false;
     try {
-      let perm = await dirHandle.queryPermission({ mode: 'readwrite' });
-      if (perm !== 'granted') perm = await dirHandle.requestPermission({ mode: 'readwrite' });
-      if (perm !== 'granted') return false;
-      const fh  = await dirHandle.getFileHandle(BACKUP_FILENAME, { create: true });
-      const writable = await fh.createWritable();
-      await writable.write(data);
-      await writable.close();
+      let perm=await dirHandle.queryPermission({mode:'readwrite'});
+      if(perm!=='granted') perm=await dirHandle.requestPermission({mode:'readwrite'});
+      if(perm!=='granted') return false;
+      const fh=await dirHandle.getFileHandle(BACKUP_FILENAME,{create:true});
+      const writable=await fh.createWritable();
+      await writable.write(data); await writable.close();
       return true;
-    } catch(e) {
-      console.error('Backup write error:', e);
-      return false;
-    }
+    } catch(e){ console.error('Backup write error:',e); return false; }
   }
 
-  async function pickBackupFolder() {
-    if (!window.showDirectoryPicker) {
-      alert('Automatic backup requires Edge or Chrome. Use the Export → Backup (JSON) option instead.');
+  async function pickBackupFolder(){
+    if(!window.showDirectoryPicker){
+      alert('Automatic backup requires Edge or Chrome. Use Export → Backup (JSON) instead.');
       return;
     }
     try {
-      const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
-      _backupDirHandle = handle;
-      idbSaveHandle(handle); // best-effort persistence
-      document.getElementById('backupFolderBtn').textContent = '📁 ' + handle.name;
-      const ok = await writeBackupFile(handle);
-      if (ok) {
-        localStorage.setItem(BACKUP_LAST_KEY, todayKey());
-        showToast('✅ Backup folder set! Saved to ' + handle.name);
-      } else {
-        showToast('⚠️ Folder selected but could not write — check folder permissions', 5000);
-      }
-    } catch(e) {
-      if (e.name !== 'AbortError') {
-        showToast('❌ ' + (e.message || 'Could not access folder'), 5000);
-        console.error('pickBackupFolder error:', e);
-      }
+      const handle=await window.showDirectoryPicker({mode:'readwrite'});
+      _backupDirHandle=handle; idbSaveHandle(handle);
+      document.getElementById('backupFolderBtn').textContent='📁 '+handle.name;
+      const ok=await writeBackupFile(handle);
+      if(ok){localStorage.setItem(BACKUP_LAST_KEY,todayKey());showToast('✅ Backup folder set! Saved to '+handle.name);}
+      else showToast('⚠️ Folder selected but could not write — check permissions',5000);
+    } catch(e){
+      if(e.name!=='AbortError') showToast('❌ '+(e.message||'Could not access folder'),5000);
     }
   }
 
-  async function runDailyBackup() {
-    const today = todayKey();
-    if (localStorage.getItem(BACKUP_LAST_KEY) === today) return;
-    const handle = _backupDirHandle || await idbLoadHandle();
-    if (!handle) return;
-    _backupDirHandle = handle;
-    const ok = await writeBackupFile(handle);
-    if (ok) {
-      localStorage.setItem(BACKUP_LAST_KEY, today);
-      document.getElementById('backupFolderBtn').textContent = '📁 ' + handle.name;
-      showToast('✅ Daily backup saved — ' + today);
+  async function runDailyBackup(){
+    const today=todayKey();
+    if(localStorage.getItem(BACKUP_LAST_KEY)===today) return;
+    const handle=_backupDirHandle||await idbLoadHandle();
+    if(!handle) return;
+    _backupDirHandle=handle;
+    const ok=await writeBackupFile(handle);
+    if(ok){
+      localStorage.setItem(BACKUP_LAST_KEY,today);
+      document.getElementById('backupFolderBtn').textContent='📁 '+handle.name;
+      showToast('✅ Daily backup saved — '+today);
     }
   }
 
-  async function initBackup() {
-    const handle = await idbLoadHandle();
-    if (handle) {
-      _backupDirHandle = handle;
-      document.getElementById('backupFolderBtn').textContent = '📁 ' + handle.name;
+  async function initBackup(){
+    const handle=await idbLoadHandle();
+    if(handle){
+      _backupDirHandle=handle;
+      document.getElementById('backupFolderBtn').textContent='📁 '+handle.name;
       await runDailyBackup();
     }
   }
@@ -1436,48 +1440,42 @@
   // ────────────────────────────────────────────
   // BACKUP / RESTORE (JSON)
   // ────────────────────────────────────────────
-  function exportJSON() {
+  function exportJSON(){
     document.getElementById('exportMenu').classList.remove('open');
-    const backup = {};
-    for (const k of Object.keys(localStorage)) {
-      if (k.startsWith('ezytask_')) backup[k] = localStorage.getItem(k);
-    }
-    const blob = new Blob([JSON.stringify(backup, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const date = fmtKey(new Date());
-    a.href = url; a.download = `ezytask-backup-${date}.json`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const backup={};
+    for(const k of Object.keys(localStorage)){if(k.startsWith('ezytask_')) backup[k]=localStorage.getItem(k);}
+    const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob), a=document.createElement('a');
+    const date=fmtKey(new Date());
+    a.href=url; a.download=`ezytask-backup-${date}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   }
 
-  function importJSON(e) {
-    const file = e.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
+  function importJSON(e){
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
       try {
-        const backup = JSON.parse(ev.target.result);
-        const keys = Object.keys(backup).filter(k => k.startsWith('ezytask_'));
-        if (!keys.length) { alert('Invalid backup file — no EZY TASK data found.'); return; }
-        if (!confirm(`This will restore ${keys.length} data entries and overwrite your current data. Continue?`)) return;
-        keys.forEach(k => localStorage.setItem(k, backup[k]));
-        // Reload app state
-        profiles = JSON.parse(localStorage.getItem('ezytask_profiles') || 'null');
-        activeProfile = localStorage.getItem('ezytask_active') || profiles[0].id;
+        const backup=JSON.parse(ev.target.result);
+        const keys=Object.keys(backup).filter(k=>k.startsWith('ezytask_'));
+        if(!keys.length){alert('Invalid backup file — no EZY TASK data found.');return;}
+        if(!confirm(`This will restore ${keys.length} data entries and overwrite your current data. Continue?`)) return;
+        keys.forEach(k=>localStorage.setItem(k,backup[k]));
+        profiles=JSON.parse(localStorage.getItem('ezytask_profiles')||'null');
+        activeProfile=localStorage.getItem('ezytask_active')||profiles[0].id;
         loadProfileData();
         applyProfileColor(getProfile().color);
-        selectedDate = todayKey(); weekOffset = 0;
+        selectedDate=todayKey(); weekOffset=0;
         renderAll();
         alert('✅ Data restored successfully!');
-      } catch(err) { alert('Failed to read backup file. Make sure it\'s a valid EZY TASK JSON backup.'); }
+      } catch(err){alert('Failed to read backup file. Make sure it\'s a valid EZY TASK JSON backup.');}
     };
     reader.readAsText(file);
-    e.target.value = ''; // reset so same file can be re-imported
+    e.target.value='';
   }
 
   // ── Init ──
-  initDB().then(() => initBackup());
+  initDB().then(()=>initBackup());
 </script>
-<div class="toast" id="toast"></div>
 </body>
 </html>
