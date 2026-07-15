@@ -549,7 +549,7 @@
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span class="logo-ver">v2.7</span>
+    <span class="logo-ver">v2.8</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
@@ -891,10 +891,10 @@
 
     function makeTaskItem(task, idx) {
       const item=document.createElement('div');
-      item.className='task-item'+(task.done?' done':'')+(task.doNow&&!task.done?' do-now':'')+(hasNotes?' has-notes-item':'');
       item.draggable=true; item.dataset.idx=idx;
       const hv=task.hours!==null&&task.hours!==undefined&&task.hours!=='';
       const noteKey=key+'-'+idx, notesOpen=openNotesSet.has(noteKey), hasNotes=task.notes&&task.notes.trim();
+      item.className='task-item'+(task.done?' done':'')+(task.doNow&&!task.done?' do-now':'')+(hasNotes?' has-notes-item':'');
       item.innerHTML=`
         <div class="drag-handle" title="Drag to reorder"><span></span><span></span><span></span></div>
         <div class="task-check ${task.done?'checked':''}"></div>
