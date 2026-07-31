@@ -26,6 +26,25 @@
       --radius:    12px;
       --radius-sm: 7px;
     }
+    [data-theme="light"] {
+      --bg:        #f4f5f7;
+      --surface:   #ffffff;
+      --surface2:  #eef0f5;
+      --border:    rgba(0,0,0,0.08);
+      --border-hi: rgba(0,0,0,0.15);
+      --accent:    #5c6bc0;
+      --accent2:   #7986cb;
+      --text:      #1a1d2e;
+      --muted:     #9ca3af;
+      --dim:       #6b7280;
+      --done-c:    #3a9e6a;
+      --red:       #c0392b;
+      --amber:     #b07d1a;
+      --rolled-clr:#5c6bc0;
+      --hours-clr: #a0622a;
+      --radius:    12px;
+      --radius-sm: 7px;
+    }
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -555,12 +574,13 @@
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span class="logo-ver">v2.9</span>
+    <span class="logo-ver">v3.0</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
   <div class="header-divider"></div>
   <div class="header-date" id="headerDate"></div>
+  <button class="backup-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle light/dark mode">☀</button>
   <button class="backup-btn" id="backupFolderBtn" onclick="pickBackupFolder()" title="Set auto-backup folder">📁 Backup</button>
   <div id="serverStatus">
     <div id="statusDot" style="background:#555"></div>
@@ -636,6 +656,22 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  // ────────────────────────────────────────────
+  // THEME TOGGLE
+  // ────────────────────────────────────────────
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    var btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.textContent = t === 'light' ? '🌙' : '☀';
+  }
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('ezytask_theme', next);
+    applyTheme(next);
+  }
+  applyTheme(localStorage.getItem('ezytask_theme') || 'dark');
+
   // ────────────────────────────────────────────
   // SUPABASE CONFIG
   // ────────────────────────────────────────────
