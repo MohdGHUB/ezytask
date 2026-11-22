@@ -1,7 +1,7 @@
 // EZY Task service worker.
 // App shell: network first, cached copy only when offline, so a new version shows without a hard refresh.
 // Cloud sync (Supabase) is on another origin and is never touched here, so tasks always go straight to the network.
-var CACHE = 'ezytask-shell-v4.1';
+var CACHE = 'ezytask-shell-v4.2';
 var SHELL = ['./', 'ezytask-manifest.json', 'ezytask-icon-192.png', 'ezytask-icon-512.png', 'ezytask-apple-touch-icon.png'];
 
 self.addEventListener('install', function (event) {
