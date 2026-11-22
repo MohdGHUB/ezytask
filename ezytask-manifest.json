@@ -1,0 +1,14 @@
+{
+  "name": "EZY Task",
+  "short_name": "EZY Task",
+  "description": "Daily tasks with a Do Now focus list, notes and cloud sync.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111318",
+  "theme_color": "#111318",
+  "icons": [
+    { "src": "ezytask-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "ezytask-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
