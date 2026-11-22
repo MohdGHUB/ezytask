@@ -18,6 +18,7 @@
       --text:      #c4ccd8;
       --muted:     #5e6e80;
       --dim:       #36404f;
+      --label:     #8a97a8; /* readable small labels (days, group headings) */
       --done-c:    #4caf7d;
       --red:       #d96b6b;
       --amber:     #c98a20;
@@ -37,6 +38,7 @@
       --text:      #1a1d2e;
       --muted:     #9ca3af;
       --dim:       #6b7280;
+      --label:     #4b5563;
       --done-c:    #3a9e6a;
       --red:       #c0392b;
       --amber:     #b07d1a;
@@ -137,9 +139,15 @@
     .header-date { font-size: 11px; color: var(--muted); flex-shrink: 0; }
 
     /* ── WEEK STRIP ── */
-    .week-strip-wrapper { padding: 14px 24px 0; }
-    .week-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
-    .week-label { font-size: 10px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 1.2px; flex: 1; }
+    /* Day pills and week nav share one line on wide screens */
+    .week-strip-wrapper { padding: 10px 24px 0; display: flex; align-items: center; gap: 10px; }
+    .week-nav { display: flex; align-items: center; gap: 8px; order: 2; flex-shrink: 0; }
+    .week-label { font-size: 10px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 1.2px; }
+    @media (max-width: 900px) {
+      .week-strip-wrapper { flex-wrap: wrap; gap: 6px; }
+      .week-nav { order: 0; width: 100%; }
+      .week-label { flex: 1; }
+    }
     .nav-btn {
       background: var(--surface); border: 1px solid var(--border);
       color: var(--muted); width: 26px; height: 26px; border-radius: 6px;
@@ -155,43 +163,38 @@
     }
     .today-btn:hover { color: var(--text); border-color: var(--border-hi); }
 
-    .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .week-strip { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; flex: 1; min-width: 0; }
 
     .day-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 9px 6px 0;
+      border-radius: var(--radius-sm); padding: 0 8px; height: 32px;
       cursor: pointer; transition: border-color 0.13s, background 0.13s;
-      text-align: center; min-height: 68px;
-      display: flex; flex-direction: column; align-items: center;
-      overflow: hidden; user-select: none;
+      display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 6px;
+      overflow: hidden; user-select: none; white-space: nowrap;
     }
     .day-card:hover { border-color: var(--border-hi); }
-    .day-card.active {
-      border-color: rgba(92,107,192,0.45);
-      background: rgba(92,107,192,0.06);
-    }
+    /* Selected day is filled with the accent so it reads at a glance */
+    .day-card.active { border-color: var(--accent); background: var(--accent); }
     .day-card.today-card .day-num {
       background: var(--accent); color: #fff; border-radius: 50%;
     }
-    .day-name { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--dim); margin-bottom: 4px; }
-    .day-card.active .day-name { color: var(--muted); }
-    .day-num { font-size: 14px; font-weight: 700; color: var(--text); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
-    .day-info { font-size: 9.5px; color: var(--dim); margin-bottom: 5px; font-weight: 500; }
-    .day-card.active .day-info { color: var(--muted); }
-    .day-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: auto; }
-    .day-bar-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
+    .day-card.active.today-card .day-num { background: #fff; color: var(--accent); }
+    .day-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--label); }
+    .day-num { font-size: 13px; font-weight: 700; color: var(--text); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+    .day-info { font-size: 10px; color: var(--label); font-weight: 500; }
+    .day-card.active .day-name, .day-card.active .day-num, .day-card.active .day-info { color: #fff; }
 
     /* ── MAIN ── */
-    .main { flex: 1; padding: 16px 24px; display: flex; flex-direction: column; }
+    .main { flex: 1; padding: 10px 24px 16px; display: flex; flex-direction: column; }
 
     /* ── PANEL HEADER ── */
     .panel-header {
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
     }
-    .panel-title-group {}
-    .panel-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
-    .panel-subtitle { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    .panel-title-group { display: flex; align-items: baseline; gap: 8px; }
+    .panel-title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; color: var(--text); }
+    .panel-subtitle { font-size: 10.5px; color: var(--muted); }
 
     .panel-right { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 
@@ -225,18 +228,18 @@
     .export-menu-item:hover { background: var(--border); color: var(--text); }
 
     /* ── ADD TASK ── */
-    .add-task-row { display: flex; gap: 6px; margin-bottom: 10px; }
+    .add-task-row { display: flex; gap: 6px; margin-bottom: 8px; height: 32px; }
     .add-task-input {
       flex: 1; background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-sm); color: var(--text); font-size: 13px;
-      padding: 9px 14px; outline: none; transition: border-color 0.13s; font-family: inherit;
+      padding: 0 12px; outline: none; transition: border-color 0.13s; font-family: inherit;
     }
     .add-task-input::placeholder { color: var(--dim); }
     .add-task-input:focus { border-color: rgba(92,107,192,0.5); }
 
     .add-btn {
       background: var(--accent); border: none; border-radius: var(--radius-sm);
-      color: #fff; font-size: 20px; font-weight: 700; width: 38px;
+      color: #fff; font-size: 18px; font-weight: 700; width: 34px;
       cursor: pointer; transition: opacity 0.13s;
       display: flex; align-items: center; justify-content: center;
     }
@@ -244,7 +247,7 @@
 
     /* ── MIC ── */
     .mic-btn {
-      width: 38px; height: 38px; border-radius: var(--radius-sm);
+      width: 34px; height: 32px; border-radius: var(--radius-sm);
       border: 1px solid var(--border); background: var(--surface);
       color: var(--muted); font-size: 1rem; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
@@ -284,22 +287,38 @@
     .col-head div + div { padding-left: 13px; }
     @media (max-width: 700px) { .col-head { display: none; } }
 
-    /* ── SECTION LABELS ── */
-    .section-lbl {
-      font-size: 9px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1.2px; color: var(--amber);
-      padding: 4px 8px 2px;
+    /* ── GROUPS: Do Now box, Backlog, folding Completed ── */
+    .group-lbl {
+      font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--label);
+      padding: 6px 8px 3px;
     }
+    .focus-box {
+      --focus-bg: rgba(201,138,32,0.10); --focus-line: rgba(201,138,32,0.45); --focus-text: var(--amber);
+      background: var(--focus-bg); border: 1px solid var(--focus-line);
+      border-radius: var(--radius-sm); padding: 0 5px 5px; margin-bottom: 6px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    [data-theme="light"] .focus-box {
+      --focus-bg: rgba(176,125,26,0.10); --focus-line: rgba(176,125,26,0.45); --focus-text: #8a5e0f;
+    }
+    .focus-box .group-lbl { color: var(--focus-text); padding: 6px 4px 3px; }
+    .focus-box .task-item { background: transparent; border-color: var(--focus-line); }
+    .focus-box .task-item:hover { background: var(--focus-bg); }
+    .focus-box .task-text { color: var(--focus-text); font-weight: 600; }
+    .focus-box .task-note { border-left-color: var(--focus-line); }
     .done-header {
-      font-size: 9px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1.2px; color: var(--dim);
-      padding: 8px 8px 3px;
+      font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--label);
+      padding: 8px 8px 3px; width: 100%;
       display: flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer; font-family: inherit;
     }
+    .done-header:hover { color: var(--muted); }
     .done-header::after {
       content: ''; flex: 1; height: 1px; background: var(--border);
     }
-    .list-sep { height: 1px; background: var(--border); margin: 4px 8px 4px; }
+    .done-list { display: flex; flex-direction: column; gap: 2px; }
 
     /* ── TASK ITEM ── */
     .task-item {
@@ -310,39 +329,29 @@
       transition: background 0.11s, border-color 0.11s;
       cursor: default; position: relative; min-width: 0;
     }
-    /* Left cell: the task itself */
+    /* Left cell: the task itself. Fixed one-line height so every row matches */
     .task-main {
-      display: flex; align-items: flex-start; gap: 8px;
-      padding: 7px 10px; min-width: 0;
-      align-self: start; /* stay at the top when the note makes the row tall */
+      display: flex; align-items: center; gap: 8px;
+      height: 28px; padding: 0 10px; min-width: 0;
+      align-self: start; /* stay at the top while a note is being edited */
     }
-    /* Right cell: always-visible status / notes */
+    /* Right cell: one-line status / notes, swaps to a textarea while editing */
     .task-note {
       border-left: 1px solid var(--border);
-      padding: 4px 6px; min-width: 0;
+      min-height: 28px; padding: 0 4px; min-width: 0;
+      display: flex; align-items: center;
     }
+    .task-note.editing { padding: 3px 4px; }
     @media (max-width: 700px) {
       .task-item { grid-template-columns: 1fr; }
-      .task-note { border-left: none; border-top: 1px dashed var(--border); padding: 3px 6px 4px 31px; }
+      .task-note { border-left: none; border-top: 1px dashed var(--border); padding-left: 27px; }
+      .task-note.editing { padding-left: 27px; } /* keep the note in place when it opens */
     }
     .task-item:hover {
       background: var(--surface2);
       border-color: rgba(255,255,255,0.13);
     }
     .task-item.done { opacity: 0.35; }
-
-    /* Do Now: amber left border accent */
-    .task-item.do-now {
-      border-left-color: var(--amber);
-      border-left-width: 2px;
-    }
-    .task-item.do-now .task-main { padding-left: 9px; }
-    .task-item.do-now:hover {
-      background: var(--surface2);
-      border-color: rgba(255,255,255,0.13);
-      border-left-color: var(--amber);
-      border-left-width: 2px;
-    }
 
     .task-item.dragging { opacity: 0.3; border-style: dashed; }
     .task-item.drag-over-top { border-top: 2px solid var(--accent); }
@@ -370,7 +379,10 @@
 
     /* Body */
     .task-body { flex: 1; min-width: 0; }
-    .task-text { font-size: 12.5px; line-height: 1.4; color: var(--text); }
+    .task-text {
+      font-size: 12.5px; line-height: 1.4; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .task-item.done .task-text { text-decoration: line-through; color: var(--dim); }
 
     .task-edit-input {
@@ -427,23 +439,24 @@
       .do-now-btn, .task-delete { opacity: 1; font-size: 14px; padding: 3px 6px; }
     }
 
-    /* Notes: edited in place; collapsed to NOTE_LINES until focused or "Show all" */
+    /* Notes: one-line view showing the latest line; full textarea only while editing */
+    .note-view {
+      flex: 1; min-width: 0; cursor: text;
+      font-size: 12px; line-height: 20px; color: var(--text);
+      padding: 0 6px; border: 1px solid transparent; border-radius: 5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      transition: border-color 0.13s;
+    }
+    .note-view:hover { border-color: var(--border-hi); }
+    .note-view.empty { color: var(--dim); font-style: italic; }
     .note-input {
-      display: block; width: 100%; background: transparent;
-      border: 1px solid transparent; border-radius: 5px;
+      display: none; width: 100%;
+      background: var(--surface2); border: 1px solid rgba(92,107,192,0.55); border-radius: 5px;
       color: var(--text); font-size: 12px; font-family: inherit; line-height: 1.45;
       padding: 3px 6px; outline: none; resize: none; overflow: hidden;
-      transition: border-color 0.13s, background 0.13s;
     }
-    .note-input::placeholder { color: var(--dim); font-style: italic; }
-    .note-input:hover { border-color: var(--border-hi); }
-    .note-input:focus { background: var(--surface2); border-color: rgba(92,107,192,0.55); }
-    .note-more {
-      display: none; background: none; border: none; cursor: pointer;
-      color: var(--accent2); font-size: 10.5px; font-family: inherit; padding: 1px 6px;
-    }
-    .note-more.show { display: inline-block; }
-    .note-more:hover { text-decoration: underline; }
+    .task-note.editing .note-view { display: none; }
+    .task-note.editing .note-input { display: block; }
 
     /* ── DAY TOTAL ── */
     .day-total {
@@ -522,18 +535,18 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .main { padding: 12px 14px; }
-      .week-strip-wrapper { padding: 12px 14px 0; }
+      .main { padding: 10px 14px 14px; }
+      .week-strip-wrapper { padding: 10px 14px 0; }
       header { padding: 10px 14px; flex-wrap: wrap; }
       .task-added-time { display: none; }
     }
     @media (max-width: 600px) {
-      .day-name { font-size: 8px; }
-      .day-num { font-size: 13px; }
+      .day-name { font-size: 9.5px; }
       .week-strip { gap: 4px; }
-      .day-card { padding: 7px 4px 0; min-height: 60px; }
+      /* Phone: name above date, no count, so 7 pills fit across */
+      .day-card { flex-direction: column; gap: 0; height: 40px; padding: 0 2px; }
+      .day-info { display: none; }
       .header-date { display: none; }
-      .panel-title { font-size: 16px; }
     }
   </style>
 </head>
@@ -543,7 +556,7 @@
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span class="logo-ver">v3.1</span>
+    <span class="logo-ver">v4.0</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
@@ -697,8 +710,8 @@
   let weekOffset   = 0;
   let selectedDate = todayKey();
   let dragSrcKey   = null, dragSrcIdx = null;
-  var expandedNotes = new Set(); // notes showing in full ("Show all"), keyed date-idx
-  var NOTE_LINES = 3;
+  var doneOpen = false; // Completed group folded by default, remembered per device
+  try { doneOpen = localStorage.getItem('ezytask_done_open')==='1'; } catch(e) {}
 
   function loadProfileData() {
     tasks  = JSON.parse(localStorage.getItem(tasksKey())  || '{}');
@@ -848,41 +861,52 @@
     days.forEach((d,i)=>{
       const key=fmtKey(d), arr=tasks[key]||[];
       const doneCount=arr.filter(t=>t.done).length, total=arr.length;
-      const pct=total?Math.round(doneCount/total*100):0;
       const card=document.createElement('div');
       card.className='day-card'+(key===tk?' today-card':'')+(key===selectedDate?' active':'');
       card.onclick=()=>selectDay(key);
       card.innerHTML=`
         <div class="day-name">${DAY_SHORT[i]}</div>
         <div class="day-num">${d.getDate()}</div>
-        <div class="day-info">${total?doneCount+'/'+total:'—'}</div>
-        <div class="day-bar"><div class="day-bar-fill" style="width:${pct}%"></div></div>
+        ${total?`<div class="day-info">${doneCount}/${total}</div>`:''}
       `;
       strip.appendChild(card);
     });
   }
 
   // ────────────────────────────────────────────
-  // NOTE SIZING
+  // NOTES
   // ────────────────────────────────────────────
-  // Grows the note box to fit its text. When not focused or expanded it is
-  // capped at NOTE_LINES, and the "Show all" link appears if text is hidden.
-  function sizeNote(ta) {
-    const more=ta.parentNode.querySelector('.note-more');
-    const focused=document.activeElement===ta, expanded=expandedNotes.has(ta.dataset.nk);
-    ta.style.height='auto';
-    const cs=getComputedStyle(ta), edge=ta.offsetHeight-ta.clientHeight;
-    const full=ta.scrollHeight+edge;
-    const cap=parseFloat(cs.lineHeight)*NOTE_LINES+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+edge;
-    const over=full>cap+1;
-    ta.style.height=((focused||expanded||!over)?full:cap)+'px';
-    if(!focused) ta.scrollTop=0;
-    more.textContent=expanded?'Show less':'Show all';
-    more.classList.toggle('show',over&&!focused);
+  // Rows show only the newest update: notes are written as a running log,
+  // newest at the bottom.
+  function noteLastLine(text) {
+    const lines=(text||'').split('\n').map(l=>l.trim()).filter(Boolean);
+    return lines.length?lines[lines.length-1]:'';
   }
-  function sizeAllNotes(){ document.querySelectorAll('.note-input').forEach(sizeNote); }
-  var _noteResizeTimer=null;
-  window.addEventListener('resize',()=>{clearTimeout(_noteResizeTimer);_noteResizeTimer=setTimeout(sizeAllNotes,120);});
+  function fillNoteView(view, text) {
+    const last=noteLastLine(text);
+    view.textContent=last||'Click to add a status…';
+    view.classList.toggle('empty',!last);
+    view.title=(text||'').trim();
+  }
+  function fitNoteInput(ta){ ta.style.height='auto'; ta.style.height=(ta.scrollHeight+ta.offsetHeight-ta.clientHeight)+'px'; }
+  // Shrinking an open note moves every row below it. If that happens before the
+  // click lands, the click hits another row and is lost. Mouse: blur comes
+  // between pointerdown and pointerup, so wait for pointerup. Touch: pointerup
+  // comes before blur, and the click follows in the same task, so a 0ms timeout
+  // is enough. pointercancel (drag, scroll) also releases a waiting collapse.
+  var _pointerDown=false, _pendingCollapse=null;
+  function releaseCollapse(){
+    _pointerDown=false;
+    const fn=_pendingCollapse; _pendingCollapse=null;
+    if(fn) setTimeout(fn,0);
+  }
+  document.addEventListener('pointerdown',()=>{_pointerDown=true;},true);
+  document.addEventListener('pointerup',releaseCollapse,true);
+  document.addEventListener('pointercancel',releaseCollapse,true);
+  function afterClick(fn){
+    if(_pendingCollapse){const old=_pendingCollapse;_pendingCollapse=null;old();}
+    if(_pointerDown) _pendingCollapse=fn; else setTimeout(fn,0);
+  }
 
   // ────────────────────────────────────────────
   // RENDER — Task Panel
@@ -897,11 +921,14 @@
     document.getElementById('progressFill').style.width=(total?Math.round(doneCount/total*100):0)+'%';
 
     const list=document.getElementById('taskList');
+    // Save any note still open before the rows are rebuilt: not every browser
+    // fires blur when a focused field is removed (iPhone Safari among them)
+    list.querySelectorAll('.task-note.editing .note-input').forEach(ta=>{if(ta._save)ta._save();});
     list.innerHTML='';
     list.className='task-list';
 
     if (!arr.length) {
-      list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No tasks yet — add one above</div></div>';
+      list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No tasks yet. Add one above.</div></div>';
       return;
     }
 
@@ -914,29 +941,29 @@
       const item=document.createElement('div');
       item.draggable=true; item.dataset.idx=idx;
       const hv=task.hours!==null&&task.hours!==undefined&&task.hours!=='';
-      const noteKey=key+'-'+idx, hasNotes=task.notes&&task.notes.trim();
-      item.className='task-item'+(task.done?' done':'')+(task.doNow&&!task.done?' do-now':'');
+      const hasNotes=task.notes&&task.notes.trim();
+      item.className='task-item'+(task.done?' done':'');
       item.innerHTML=`
         <div class="task-main">
           <div class="drag-handle" title="Drag to reorder"><span></span><span></span><span></span></div>
           <div class="task-check ${task.done?'checked':''}"></div>
           <div class="task-body">
-            <div class="task-text">${escHtml(task.text)}</div>
+            <div class="task-text" title="${escHtml(task.text)}">${escHtml(task.text)}</div>
             ${task.rolledFrom?`<div class="rolled-badge">↩ ${fmtRolledDate(task.rolledFrom)}</div>`:''}
           </div>
           ${!task.rolledFrom&&task.addedTime?`<div class="task-added-time">${escHtml(task.addedTime)}</div>`:''}
           <div class="hours-wrap" title="Time spent (optional)">
             <span class="hours-icon ${hv?'has-value':''}">⏱</span>
             <input class="hours-input" type="number" min="0" max="24" step="0.25"
-              placeholder="—" value="${hv?task.hours:''}" onclick="event.stopPropagation()" />
+              placeholder="-" value="${hv?task.hours:''}" onclick="event.stopPropagation()" />
             <span class="hours-unit">h</span>
           </div>
           <button class="do-now-btn ${task.doNow?'active':''}" title="${task.doNow?'Clear Do Now':'Mark as Do Now'}">⚡</button>
           <button class="task-delete" title="Remove">✕</button>
         </div>
         <div class="task-note">
-          <textarea class="note-input" rows="1" data-nk="${noteKey}" placeholder="Click to add a status…">${hasNotes?escHtml(task.notes):''}</textarea>
-          <button class="note-more" type="button"></button>
+          <div class="note-view" tabindex="0" role="button" aria-label="Edit status"></div>
+          <textarea class="note-input" rows="1">${hasNotes?escHtml(task.notes):''}</textarea>
         </div>
       `;
 
@@ -945,17 +972,27 @@
       item.querySelector('.do-now-btn').addEventListener('click',e=>{e.stopPropagation();toggleDoNow(key,idx);});
       item.querySelector('.task-delete').addEventListener('click',e=>{e.stopPropagation();deleteTask(key,idx);});
 
-      // Status / notes cell: always editable, saves on blur without redrawing the list
-      const ta=item.querySelector('.note-input');
-      ta.addEventListener('focus',()=>sizeNote(ta));
-      ta.addEventListener('input',()=>sizeNote(ta));
-      ta.addEventListener('blur',()=>{saveNotes(key,idx,ta.value);sizeNote(ta);});
-      ta.addEventListener('keydown',e=>{if(e.key==='Escape')ta.blur();});
-      item.querySelector('.note-more').addEventListener('click',e=>{
-        e.stopPropagation();
-        if(expandedNotes.has(noteKey)) expandedNotes.delete(noteKey); else expandedNotes.add(noteKey);
-        sizeNote(ta);
+      // Status / notes cell: one line until clicked, then the full note grows in
+      // place. Saves on blur without redrawing the list.
+      const cell=item.querySelector('.task-note'), view=cell.querySelector('.note-view'), ta=cell.querySelector('.note-input');
+      fillNoteView(view, task.notes);
+      const openNote=()=>{
+        cell.classList.add('editing');
+        fitNoteInput(ta); ta.focus();
+        ta.setSelectionRange(ta.value.length, ta.value.length);
+      };
+      view.addEventListener('click',e=>{e.stopPropagation();openNote();});
+      view.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openNote();}});
+      ta._save=()=>saveNotes(key,idx,ta.value); // used by renderTaskPanel if a note is still open
+      ta.addEventListener('input',()=>fitNoteInput(ta));
+      ta.addEventListener('blur',()=>{
+        ta._save();
+        afterClick(()=>{
+          if(document.activeElement===ta) return; // clicked back into it meanwhile
+          fillNoteView(view,ta.value);cell.classList.remove('editing');
+        });
       });
+      ta.addEventListener('keydown',e=>{if(e.key==='Escape')ta.blur();});
       // Let text be selected in the note without starting a row drag
       item.querySelector('.task-note').addEventListener('mousedown',()=>{item.draggable=false;});
       item.querySelector('.task-main').addEventListener('mousedown',()=>{item.draggable=true;});
@@ -993,7 +1030,8 @@
         dragSrcKey=null; dragSrcIdx=null;
       });
       item.addEventListener('dragover',e=>{
-        e.preventDefault(); if(dragSrcKey!==key) return;
+        if(dragSrcKey!==key||!tasks[key][dragSrcIdx]||!!tasks[key][dragSrcIdx].done!==!!task.done) return; // no drop between open and completed
+        e.preventDefault();
         document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(el=>el.classList.remove('drag-over-top','drag-over-bottom'));
         const r=item.getBoundingClientRect();
         item.classList.add(e.clientY<r.top+r.height/2?'drag-over-top':'drag-over-bottom');
@@ -1003,10 +1041,7 @@
       item.addEventListener('drop',e=>{
         e.preventDefault(); if(dragSrcKey!==key||dragSrcIdx===idx) return;
         const r=item.getBoundingClientRect(), after=e.clientY>=r.top+r.height/2;
-        let t=parseInt(item.dataset.idx); if(after) t+=1;
-        const [m]=tasks[key].splice(dragSrcIdx,1);
-        tasks[key].splice(t>dragSrcIdx?t-1:t,0,m);
-        saveTasks(); renderAll();
+        if(moveTask(key,dragSrcIdx,idx,after)) renderAll();
       });
 
       return item;
@@ -1021,24 +1056,36 @@
     head.innerHTML='<div>Task</div><div>Status / notes</div>';
     list.appendChild(head);
 
-    if (doNowArr.length) {
+    function groupLabel(text, target) {
       const lbl=document.createElement('div');
-      lbl.className='section-lbl'; lbl.textContent='⚡ Do Now';
-      list.appendChild(lbl);
-      addItems(doNowArr, list);
-      if (activeArr.length||doneArr.length) {
-        const sep=document.createElement('div');
-        sep.className='list-sep'; list.appendChild(sep);
+      lbl.className='group-lbl'; lbl.textContent=text;
+      target.appendChild(lbl);
+    }
+
+    if (doNowArr.length) {
+      const box=document.createElement('div');
+      box.className='focus-box';
+      groupLabel('⚡ Do now · '+doNowArr.length, box);
+      addItems(doNowArr, box);
+      list.appendChild(box);
+    }
+    if (activeArr.length) {
+      groupLabel('Backlog · '+activeArr.length, list);
+      addItems(activeArr, list);
+    }
+    if (doneArr.length) {
+      const dh=document.createElement('button');
+      dh.type='button'; dh.className='done-header';
+      dh.textContent='Completed ('+doneArr.length+') '+(doneOpen?'▾':'▸');
+      dh.addEventListener('click',toggleDone);
+      list.appendChild(dh);
+      if (doneOpen) {
+        const dl=document.createElement('div');
+        dl.className='done-list';
+        addItems(doneArr, dl);
+        list.appendChild(dl);
       }
     }
-    addItems(activeArr, list);
-    if (doneArr.length) {
-      const dh=document.createElement('div');
-      dh.className='done-header'; dh.textContent='Completed '+doneArr.length;
-      list.appendChild(dh);
-      addItems(doneArr, list);
-    }
-    sizeAllNotes();
 
     // Day total hours
     const th=dayTotalHours(key);
@@ -1079,6 +1126,23 @@
   }
 
   function toggleTask(k,i){tasks[k][i].done=!tasks[k][i].done;if(tasks[k][i].done)tasks[k][i].doNow=false;saveTasks();renderAll();}
+  // Drag-drop reorder. Dropping into the Do Now box makes the task Do Now, and
+  // dropping into the Backlog clears it. Open and completed tasks don't mix.
+  function moveTask(k, from, targetIdx, after){
+    const list=tasks[k], m=list[from], target=list[targetIdx];
+    if(!m||!target||from===targetIdx||!!m.done!==!!target.done) return false;
+    if(!m.done) m.doNow=!!target.doNow;
+    let t=targetIdx+(after?1:0);
+    list.splice(from,1);
+    list.splice(t>from?t-1:t,0,m);
+    saveTasks();
+    return true;
+  }
+  function toggleDone(){
+    doneOpen=!doneOpen;
+    try{localStorage.setItem('ezytask_done_open',doneOpen?'1':'0');}catch(e){}
+    renderTaskPanel();
+  }
   function toggleDoNow(k,i){tasks[k][i].doNow=!tasks[k][i].doNow;saveTasks();renderAll();}
 
   // No re-render here: redrawing on blur would swallow the click that caused it
@@ -1287,7 +1351,7 @@
 
   function startVoice(){
     var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if (!SR){showToast('Voice not supported — try Chrome, Edge or Safari');return;}
+    if (!SR){showToast('Voice not supported. Try Chrome, Edge or Safari.');return;}
     if (voiceRecognition){voiceRecognition.stop();return;}
 
     voiceRecognition=new SR();
@@ -1300,7 +1364,7 @@
     showToast('🎤 Listening...');
 
     voiceRecognition.onresult=function(e){ parseVoiceInput(e.results[0][0].transcript); };
-    voiceRecognition.onerror=function(){ showToast('Could not hear you — try again'); stopVoice(); };
+    voiceRecognition.onerror=function(){ showToast('Could not hear you. Try again.'); stopVoice(); };
     voiceRecognition.onend=stopVoice;
     voiceRecognition.start();
   }
@@ -1409,7 +1473,7 @@
       document.getElementById('backupFolderBtn').textContent='📁 '+handle.name;
       const ok=await writeBackupFile(handle);
       if(ok){localStorage.setItem(BACKUP_LAST_KEY,todayKey());showToast('✅ Backup folder set! Saved to '+handle.name);}
-      else showToast('⚠️ Folder selected but could not write — check permissions',5000);
+      else showToast('⚠️ Folder selected but could not write. Check permissions.',5000);
     } catch(e){
       if(e.name!=='AbortError') showToast('❌ '+(e.message||'Could not access folder'),5000);
     }
@@ -1425,7 +1489,7 @@
     if(ok){
       localStorage.setItem(BACKUP_LAST_KEY,today);
       document.getElementById('backupFolderBtn').textContent='📁 '+handle.name;
-      showToast('✅ Daily backup saved — '+today);
+      showToast('✅ Daily backup saved: '+today);
     }
   }
 
@@ -1459,7 +1523,7 @@
       try {
         const backup=JSON.parse(ev.target.result);
         const keys=Object.keys(backup).filter(k=>k.startsWith('ezytask_'));
-        if(!keys.length){alert('Invalid backup file — no EZY TASK data found.');return;}
+        if(!keys.length){alert('Invalid backup file. No EZY TASK data found.');return;}
         if(!confirm(`This will restore ${keys.length} data entries and overwrite your current data. Continue?`)) return;
         keys.forEach(k=>localStorage.setItem(k,backup[k]));
         profiles=JSON.parse(localStorage.getItem('ezytask_profiles')||'null');
