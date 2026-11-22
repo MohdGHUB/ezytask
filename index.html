@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>EZY TASK</title>
+  <!-- PWA: installable on iPhone (Share, Add to Home Screen), Android and Edge -->
+  <meta name="theme-color" content="#111318" id="themeColorMeta" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="EZY Task" />
+  <link rel="manifest" href="ezytask-manifest.json" />
+  <link rel="icon" type="image/png" href="ezytask-icon-192.png" />
+  <link rel="apple-touch-icon" href="ezytask-apple-touch-icon.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -556,7 +565,7 @@
   <div class="logo">
     <div class="logo-icon">✅</div>
     <span class="logo-text">EZY TASK</span>
-    <span class="logo-ver">v4.0</span>
+    <span class="logo-ver">v4.1</span>
   </div>
   <div class="header-divider"></div>
   <div class="profile-strip" id="profileStrip"></div>
@@ -644,6 +653,8 @@
     document.documentElement.setAttribute('data-theme', t);
     var btn = document.getElementById('themeToggleBtn');
     if (btn) btn.textContent = t === 'light' ? '🌙' : '☀';
+    var meta = document.getElementById('themeColorMeta'); // phone status bar / title bar colour
+    if (meta) meta.setAttribute('content', t === 'light' ? '#f4f5f7' : '#111318');
   }
   function toggleTheme() {
     var cur = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -1541,6 +1552,9 @@
 
   // ── Init ──
   initDB().then(()=>initBackup());
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('ezytask-sw.js').catch(function(){});
+  }
 </script>
 </body>
 </html>
